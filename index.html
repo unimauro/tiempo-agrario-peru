@@ -23,7 +23,8 @@
   --line:#d6cfba;
   --personal:#9a9b86; --wheat:#bf8a2d; --madder:#9e2b1e; --madder-soft:#c1573f;
   --ring:#9e2b1e;
-  --e-out:cubic-bezier(.165,.84,.44,1); --e-dec:cubic-bezier(.215,.61,.355,1);
+  /* Emil Kowalski canonical curves — strong ease-out for UI entrances/interactions */
+  --e-out:cubic-bezier(.23,1,.32,1); --e-dec:cubic-bezier(.23,1,.32,1);
   --shadow:0 1px 1px rgba(40,30,10,.04);
   --shadow-lift:0 14px 30px rgba(60,42,15,.14);
 }
@@ -74,7 +75,7 @@ header.top .brand{font-family:Bitter;font-weight:700;font-size:15px}
 .daywrap .caption{font-size:14px;color:var(--muted);margin:0 0 10px}
 .daywrap .caption strong{color:var(--ink);font-weight:600}
 .strip{display:flex;height:76px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
-  box-shadow:var(--shadow);transform-origin:left center}
+  box-shadow:var(--shadow)}
 .seg{position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 16px;color:#fff;min-width:0;overflow:hidden}
 .seg .sl{font-size:12.5px;font-weight:500;opacity:.92;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
 .seg .sv{font-size:17px;font-weight:600}
@@ -108,8 +109,10 @@ section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
 @media(max-width:720px){.cards{grid-template-columns:1fr}}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);
-  transition:transform .25s var(--e-out),box-shadow .25s var(--e-out),border-color .25s}
-.card:hover{transform:translateY(-4px) scale(1.012);box-shadow:var(--shadow-lift);border-color:var(--madder-soft)}
+  transition:transform .22s var(--e-out),box-shadow .22s var(--e-out),border-color .22s var(--e-out)}
+@media (hover:hover) and (pointer:fine){
+  .card:hover{transform:translateY(-4px) scale(1.012);box-shadow:var(--shadow-lift);border-color:var(--madder-soft)}
+}
 .card .n{font-family:"IBM Plex Mono",monospace;font-size:30px;font-weight:600;color:var(--ink);line-height:1}
 .card.hl .n{color:var(--madder)}
 .card .t{font-size:14px;color:var(--muted);margin-top:9px}
@@ -117,8 +120,8 @@ section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
 /* agrarian ledger callout */
 .ledger{margin-top:28px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
 .ledger .bar{background:var(--madder);color:#fff;padding:14px 20px;font-family:Bitter;font-weight:600;font-size:18px;
-  display:flex;align-items:center;gap:10px;cursor:pointer;transition:filter .18s var(--e-out)}
-.ledger .bar:hover{filter:brightness(1.07)}
+  display:flex;align-items:center;gap:10px;cursor:pointer;transition:filter .16s var(--e-out)}
+@media (hover:hover) and (pointer:fine){ .ledger .bar:hover{filter:brightness(1.07)} }
 .ledger .body{padding:18px 20px}
 .ledger p{margin:0 0 10px}
 .ledger ul{list-style:none;padding:0;margin:14px 0 2px}
@@ -139,7 +142,7 @@ footer a{color:var(--madder);text-decoration:none}
 footer a:hover{text-decoration:underline}
 
 /* reveal on scroll */
-.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s var(--e-dec),transform .55s var(--e-dec);
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s var(--e-dec),transform .5s var(--e-dec);
   transition-delay:calc(var(--i,0)*60ms)}
 .reveal.in{opacity:1;transform:none}
 
@@ -334,17 +337,15 @@ function drawChart(){
 drawChart();
 window.addEventListener('resize',()=>chart&&chart.resize());
 
-/* ---- Day strip reveal (the one orchestrated moment) ---- */
+/* ---- Day strip reveal: left-to-right wipe via clip-path (no content distortion) ----
+   Rare/first-time tier → delight budget allows a longer, orchestrated reveal (~900ms). */
 (function(){
   const strip=document.getElementById('dayStrip');
-  if(reduce) return;
-  const segs=[...strip.querySelectorAll('.seg')];
-  strip.style.transform='scaleX(0)';
-  strip.style.transition='transform .9s var(--e-out)';
-  segs.forEach(s=>{s.style.opacity='0';s.style.transition='opacity .4s ease';});
+  if(reduce) return;                       // reduced-motion: show final state, no wipe
+  strip.style.clipPath='inset(0 100% 0 0)';
+  strip.style.transition='clip-path .9s var(--e-out)';
   const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
-    strip.style.transform='scaleX(1)';
-    setTimeout(()=>segs.forEach((s,i)=>setTimeout(()=>s.style.opacity='1',i*90)),500);
+    requestAnimationFrame(()=>{strip.style.clipPath='inset(0 0 0 0)';});
     io.disconnect();
   }});},{threshold:.4});
   io.observe(strip);
