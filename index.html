@@ -21,7 +21,7 @@
 :root{
   --paper:#e7e3d3; --panel:#efebdd; --ink:#20190f; --muted:#6c6049; --faint:#8c8166;
   --line:#d6cfba;
-  --personal:#9a9b86; --wheat:#bf8a2d; --madder:#9e2b1e; --madder-soft:#c1573f;
+  --personal:#9a9b86; --wheat:#bf8a2d; --madder:#9e2b1e; --madder-soft:#c1573f; --green:#3a6b50;
   --ring:#9e2b1e;
   /* Emil Kowalski canonical curves — strong ease-out for UI entrances/interactions */
   --e-out:cubic-bezier(.23,1,.32,1); --e-dec:cubic-bezier(.23,1,.32,1);
@@ -31,7 +31,7 @@
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
   --line:#42371f;
-  --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330;
+  --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330; --green:#6cc49a;
   --ring:#d8503c;
   --shadow:0 1px 1px rgba(0,0,0,.3);
   --shadow-lift:0 16px 34px rgba(0,0,0,.5);
@@ -39,7 +39,7 @@
 :root[data-theme="dark"]{
   --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
   --line:#42371f;
-  --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330;
+  --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330; --green:#6cc49a;
   --ring:#d8503c;
   --shadow:0 1px 1px rgba(0,0,0,.3);
   --shadow-lift:0 16px 34px rgba(0,0,0,.5);
@@ -117,6 +117,13 @@ section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
 .panel .hint{font-size:13px;color:var(--faint);margin:3px 0 10px}
 .chart{width:100%;height:380px}
 @media(max-width:640px){.chart{height:420px}}
+.tabs{display:flex;gap:2px;position:relative;border-bottom:1px solid var(--line);margin:-2px 0 6px;flex-wrap:wrap}
+.tab{appearance:none;background:none;border:none;color:var(--muted);font:inherit;font-size:13.5px;font-weight:500;
+  padding:9px 13px;cursor:pointer;border-radius:8px 8px 0 0;transition:color .18s var(--e-out)}
+.tab.on{color:var(--ink)}
+.tab-ind{position:absolute;bottom:-1px;left:0;height:2px;background:var(--madder);border-radius:2px;
+  transition:transform .28s var(--e-out),width .28s var(--e-out);will-change:transform,width}
+@media (hover:hover) and (pointer:fine){ .tab:hover{color:var(--ink)} }
 
 /* stat row cards */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
@@ -267,7 +274,7 @@ footer a:hover{text-decoration:underline}
 
   <!-- KEY FIGURE -->
   <div class="keyfig reveal">
-    <span class="big mono">3,5×</span>
+    <span class="big mono" id="kf">3,5×</span>
     <p class="gloss">En el campo, la mujer dedica <b>5 h 15 min</b> al día a trabajo no remunerado; el hombre, <b>1 h 30 min</b>. Es la brecha de género más ancha del país en el reparto del tiempo.</p>
   </div>
 
@@ -277,8 +284,14 @@ footer a:hover{text-decoration:underline}
     <h2>Las mismas 24 horas, repartidas muy distinto</h2>
     <p class="sub">Cada barra es un día completo. Lo que cambia entre hombres y mujeres —y entre campo y ciudad— es cuánto de ese día es trabajo que nadie paga.</p>
     <div class="panel reveal">
-      <h3>Reparto del día por sexo y área</h3>
-      <p class="hint">Tiempo social, día de semana. Horas por día. ENUT 2024 (INEI).</p>
+      <div class="tabs" id="chartTabs">
+        <button class="tab on" data-k="dia" type="button">El día (24 h)</button>
+        <button class="tab" data-k="norem" type="button">No remunerado</button>
+        <button class="tab" data-k="ocup" type="button">En la ocupación</button>
+        <button class="tab" data-k="total" type="button">Carga global</button>
+        <span class="tab-ind" id="tabInd"></span>
+      </div>
+      <p class="hint" id="chartHint">Tiempo social, día de semana. Horas por día. ENUT 2024 (INEI).</p>
       <div id="chartDay" class="chart"></div>
     </div>
   </section>
@@ -409,39 +422,84 @@ const personal=[15.233,16.217,15.483,16.050];
 const ocup    =[3.500 ,6.267 ,3.817 ,6.317 ];
 const norem   =[5.250 ,1.500 ,4.667 ,1.600 ];
 
-let chart;
-function drawChart(){
+const total=groups.map((_,i)=>ocup[i]+norem[i]);   // carga global = ocupación + no remunerado
+const HINTS={
+  dia:'Cada barra es un día completo (24 h). Tiempo social, día de semana. ENUT 2024 (INEI).',
+  norem:'Trabajo doméstico y de cuidados que nadie paga. Tiempo social, día de semana. ENUT 2024 (INEI).',
+  ocup:'Empleo y producción para autoconsumo. Tiempo social, día de semana. ENUT 2024 (INEI).',
+  total:'Ocupación + no remunerado. Las mujeres (rojo) suman más que los hombres (verde). ENUT 2024 (INEI).'
+};
+let chart, currentTab='dia';
+function renderTab(k){
+  currentTab=k;
   const el=document.getElementById('chartDay');
-  if(typeof echarts==='undefined'||!el){            // CDN falló: aviso, no tumbes la página
+  if(typeof echarts==='undefined'||!el){
     if(el) el.innerHTML='<p style="color:var(--muted);font-size:14px;padding:12px">No se pudo cargar la librería de gráficos. Recarga la página.</p>';
     return;
   }
-  if(chart) chart.dispose();
-  chart=echarts.init(el);
+  if(!chart) chart=echarts.init(el);
+  const h=document.getElementById('chartHint'); if(h) h.textContent=HINTS[k];
   const label={color:C('--muted'),fontSize:12,fontFamily:'IBM Plex Sans'};
-  chart.setOption({
-    grid:{left:6,right:16,top:8,bottom:30,containLabel:true},
-    legend:{show:false},
-    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},
-      backgroundColor:C('--panel'),borderColor:C('--line'),textStyle:{color:C('--ink')},
-      formatter:p=>{let s='<b>'+p[0].axisValue+'</b><br>';let t=0;p.forEach(x=>{s+=x.marker+' '+x.seriesName+': <b>'+hm(x.value)+'</b><br>';t+=x.value;});return s+'Total: <b>'+hm(t)+'</b>';}},
-    xAxis:{type:'value',max:24,interval:6,axisLabel:{...label,formatter:'{value} h'},
-      axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:C('--line')}}},
-    yAxis:{type:'category',data:groups,inverse:true,axisLabel:{...label,fontWeight:500,color:C('--ink')},
-      axisLine:{lineStyle:{color:C('--line')}},axisTick:{show:false}},
-    series:[
-      {name:'Personales',type:'bar',stack:'d',data:personal,itemStyle:{color:C('--personal')},barWidth:'58%',
-        animationDuration:reduce?0:700,animationEasing:'cubicOut'},
-      {name:'En la ocupación',type:'bar',stack:'d',data:ocup,itemStyle:{color:C('--wheat')},
-        animationDuration:reduce?0:700,animationDelay:reduce?0:120,animationEasing:'cubicOut'},
-      {name:'No remunerado',type:'bar',stack:'d',data:norem,itemStyle:{color:C('--madder')},
-        animationDuration:reduce?0:700,animationDelay:reduce?0:240,animationEasing:'cubicOut',
-        label:{show:true,position:'insideRight',formatter:p=>hm(p.value),color:'#fff',fontSize:11,fontFamily:'IBM Plex Mono'}}
-    ]
-  });
+  const grid={left:6,right:18,top:8,bottom:30,containLabel:true};
+  const yAxis={type:'category',data:groups,inverse:true,axisLabel:{...label,fontWeight:500,color:C('--ink')},
+      axisLine:{lineStyle:{color:C('--line')}},axisTick:{show:false}};
+  const dur=reduce?0:650;
+  let opt;
+  if(k==='dia'){
+    opt={grid,legend:{show:false},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:C('--panel'),borderColor:C('--line'),textStyle:{color:C('--ink')},
+        formatter:p=>{let s='<b>'+p[0].axisValue+'</b><br>';let t=0;p.forEach(x=>{s+=x.marker+' '+x.seriesName+': <b>'+hm(x.value)+'</b><br>';t+=x.value;});return s+'Total: <b>'+hm(t)+'</b>';}},
+      xAxis:{type:'value',max:24,interval:6,axisLabel:{...label,formatter:'{value} h'},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:C('--line')}}},
+      yAxis,
+      series:[
+        {name:'Personales',type:'bar',stack:'d',data:personal,itemStyle:{color:C('--personal')},barWidth:'58%',animationDuration:dur,animationEasing:'cubicOut'},
+        {name:'En la ocupación',type:'bar',stack:'d',data:ocup,itemStyle:{color:C('--wheat')},animationDuration:dur,animationEasing:'cubicOut'},
+        {name:'No remunerado',type:'bar',stack:'d',data:norem,itemStyle:{color:C('--madder')},animationDuration:dur,animationEasing:'cubicOut',
+          label:{show:true,position:'insideRight',formatter:p=>hm(p.value),color:'#fff',fontSize:11,fontFamily:'IBM Plex Mono'}}
+      ]};
+  } else {
+    const data = k==='norem'?norem : k==='ocup'?ocup : total;
+    const maxv = k==='norem'?7 : k==='ocup'?8 : 10;
+    const color = k==='total'
+      ? (p)=> (p.dataIndex%2===0 ? C('--madder') : C('--green'))
+      : (k==='norem'? C('--madder') : C('--wheat'));
+    opt={grid,legend:{show:false},
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:C('--panel'),borderColor:C('--line'),textStyle:{color:C('--ink')},
+        formatter:p=>p[0].axisValue+': <b>'+hm(p[0].value)+'</b>'},
+      xAxis:{type:'value',max:maxv,axisLabel:{...label,formatter:'{value} h'},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:C('--line')}}},
+      yAxis,
+      series:[{type:'bar',data,barWidth:'56%',itemStyle:{color,borderRadius:[0,5,5,0]},
+        animationDuration:dur,animationEasing:'cubicOut',
+        label:{show:true,position:'right',formatter:p=>hm(p.value),color:C('--ink'),fontSize:12,fontFamily:'IBM Plex Mono'}}]};
+  }
+  chart.setOption(opt,true);
 }
-drawChart();
-window.addEventListener('resize',()=>chart&&chart.resize());
+function moveInd(){
+  const ind=document.getElementById('tabInd'); const act=document.querySelector('.tab.on');
+  if(ind&&act){ind.style.width=act.offsetWidth+'px';ind.style.transform='translateX('+act.offsetLeft+'px)';}
+}
+(function initTabs(){
+  const tabs=document.getElementById('chartTabs'); if(!tabs) return;
+  tabs.addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    b.classList.add('on'); moveInd(); renderTab(b.dataset.k);});
+  moveInd(); setTimeout(moveInd,350);   // reposition after fonts settle
+})();
+renderTab('dia');
+window.addEventListener('resize',()=>{chart&&chart.resize();moveInd();});
+
+/* ---- Conteo animado del 3,5× (una vez, al entrar en viewport) ---- */
+(function(){
+  const el=document.getElementById('kf'); if(!el) return;
+  const target=3.5;
+  if(reduce){el.textContent='3,5×';return;}
+  const run=()=>{const t0=performance.now(),d=950;
+    (function tick(t){const p=Math.min((t-t0)/d,1),e=1-Math.pow(1-p,3);
+      el.textContent=(target*e).toFixed(1).replace('.',',')+'×';
+      if(p<1)requestAnimationFrame(tick);})(performance.now());};
+  const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){run();io.disconnect();}}),{threshold:.6});
+  io.observe(el);
+})();
 
 /* ---- Day strip reveal: left-to-right wipe via clip-path (no content distortion) ----
    Rare/first-time tier → delight budget allows a longer, orchestrated reveal (~900ms). */
@@ -545,7 +603,7 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
   const dark=cur==='dark'||(!cur&&matchMedia('(prefers-color-scheme: dark)').matches);
   const next=dark?'light':'dark';root.setAttribute('data-theme',next);
   try{localStorage.setItem('tap-theme',next);}catch(e){}
-  setTimeout(drawChart,40);
+  setTimeout(()=>{renderTab(currentTab);moveInd();},40);
 });
 </script>
 </body>
