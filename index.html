@@ -29,16 +29,16 @@
   --shadow-lift:0 14px 30px rgba(60,42,15,.14);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --paper:#1d1810; --panel:#2a2317; --ink:#efe8d8; --muted:#a89c84; --faint:#8a7f66;
-  --line:#3a301f;
+  --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
+  --line:#42371f;
   --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330;
   --ring:#d8503c;
   --shadow:0 1px 1px rgba(0,0,0,.3);
   --shadow-lift:0 16px 34px rgba(0,0,0,.5);
 }}
 :root[data-theme="dark"]{
-  --paper:#1d1810; --panel:#2a2317; --ink:#efe8d8; --muted:#a89c84; --faint:#8a7f66;
-  --line:#3a301f;
+  --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
+  --line:#42371f;
   --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330;
   --ring:#d8503c;
   --shadow:0 1px 1px rgba(0,0,0,.3);
@@ -48,12 +48,11 @@
 html{scroll-behavior:smooth}
 body{margin:0;color:var(--ink);
   font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
-  /* amanecer sobre el campo + surcos arados, aterrizan el tema agrario */
+  /* luz de amanecer cálida sobre el campo — limpio, sin textura ruidosa */
   background:
-    radial-gradient(1100px 460px at 12% -6%, color-mix(in srgb,var(--wheat) 16%,transparent), transparent 62%),
-    repeating-linear-gradient(134deg, transparent 0 23px, color-mix(in srgb,var(--ink) 3%,transparent) 23px 24px),
+    radial-gradient(1200px 560px at 10% -10%, color-mix(in srgb,var(--wheat) 20%,transparent), transparent 58%),
     var(--paper);
-  background-repeat:no-repeat,repeat,no-repeat}
+  background-repeat:no-repeat}
 .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
 h1,h2,h3{font-family:Bitter,Georgia,serif;font-weight:600;line-height:1.12;letter-spacing:-.01em;margin:0}
 .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
@@ -82,8 +81,8 @@ header.top .brand{font-family:Bitter;font-weight:700;font-size:15px}
 .daywrap{margin:34px 0 8px}
 .daywrap .caption{font-size:14px;color:var(--muted);margin:0 0 10px}
 .daywrap .caption strong{color:var(--ink);font-weight:600}
-.strip{display:flex;height:76px;border-radius:12px;overflow:hidden;border:1px solid var(--line);
-  box-shadow:var(--shadow)}
+.strip{display:flex;gap:2px;height:94px;border-radius:14px;overflow:hidden;border:1px solid var(--line);
+  background:var(--paper);box-shadow:var(--shadow)}
 .seg{position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 16px;color:#fff;min-width:0;overflow:hidden}
 .seg .sl{font-size:12.5px;font-weight:500;opacity:.92;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
 .seg .sv{font-size:17px;font-weight:600}
@@ -378,11 +377,8 @@ window.addEventListener('resize',()=>chart&&chart.resize());
   if(reduce) return;                       // reduced-motion: show final state, no wipe
   strip.style.clipPath='inset(0 100% 0 0)';
   strip.style.transition='clip-path .9s var(--e-out)';
-  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
-    requestAnimationFrame(()=>{strip.style.clipPath='inset(0 0 0 0)';});
-    io.disconnect();
-  }});},{threshold:.4});
-  io.observe(strip);
+  // arriba del fold: revelar al cargar, sin depender del scroll
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{strip.style.clipPath='inset(0 0 0 0)';}));
 })();
 
 /* ---- Scroll reveal, staggered ---- */
