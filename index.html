@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El tiempo invisible del agro · Observatorio del uso del tiempo rural en el Perú</title>
+<meta name="description" content="Observatorio del uso del tiempo rural en el Perú con datos oficiales de la ENUT 2024 (INEI). Cuánto trabaja —sin paga— la mujer rural en el campo y en el hogar: un dato que las estadísticas agrarias no miden.">
+<meta property="og:title" content="El tiempo invisible del agro — Observatorio del uso del tiempo rural (Perú)">
+<meta property="og:description" content="Datos oficiales ENUT 2024 (INEI): la mujer rural carga más horas de trabajo total que el hombre. El trabajo agropecuario para autoconsumo y de cuidados no aparece en las estadísticas agrarias.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.1/echarts.min.js"></script>
+<style>
+:root{
+  --bg:#f7f4ee; --surface:#fffdf8; --ink:#241f1a; --muted:#6b6256;
+  --line:#e7e0d3; --brand:#7a5a2e; --brand2:#2f6d4f;
+  --mujer:#b4472e; --hombre:#2f6d4f; --rural:#7a5a2e; --urbano:#c08a3e;
+  --accent:#b4472e; --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 28px rgba(60,45,20,.07);
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15120e; --surface:#1e1a14; --ink:#f0e9dc; --muted:#a79b86;
+    --line:#312a20; --brand:#d6b483; --brand2:#6cc49a;
+    --mujer:#e08064; --hombre:#6cc49a; --rural:#d6b483; --urbano:#e0b268;
+    --accent:#e08064; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15120e; --surface:#1e1a14; --ink:#f0e9dc; --muted:#a79b86;
+  --line:#312a20; --brand:#d6b483; --brand2:#6cc49a;
+  --mujer:#e08064; --hombre:#6cc49a; --rural:#d6b483; --urbano:#e0b268;
+  --accent:#e08064; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;font-weight:600;letter-spacing:-.01em}
+a{color:var(--accent)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--brand);background:color-mix(in srgb,var(--brand) 12%,transparent);padding:5px 11px;border-radius:999px}
+header.hero{padding:54px 0 30px}
+header.hero h1{font-size:clamp(30px,6vw,52px);margin:16px 0 10px}
+header.hero p.lede{font-size:clamp(16px,2.4vw,20px);color:var(--muted);max-width:60ch;margin:0 0 6px}
+.src-note{font-size:13px;color:var(--muted);margin-top:14px}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:30px 0 8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.stat .num{font-family:Fraunces,serif;font-size:clamp(28px,4.4vw,40px);font-weight:700;line-height:1;color:var(--accent)}
+.stat .lbl{font-size:14px;color:var(--muted);margin-top:8px}
+.stat.alt .num{color:var(--brand2)}
+
+section{padding:30px 0;border-top:1px solid var(--line)}
+section h2{font-size:clamp(22px,3.6vw,30px);margin:0 0 6px}
+section .sub{color:var(--muted);margin:0 0 18px;max-width:66ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 16px 10px;box-shadow:var(--shadow);margin-top:16px}
+.card h3{font-size:16px;margin:0 0 2px}
+.card .hint{font-size:13px;color:var(--muted);margin:0 0 6px}
+.chart{width:100%;height:340px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}.chart{height:300px}}
+
+.callout{background:color-mix(in srgb,var(--brand2) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--brand2) 28%,var(--line));border-left:4px solid var(--brand2);border-radius:12px;padding:18px 20px;margin-top:18px}
+.callout h3{margin:0 0 6px;font-size:18px;color:var(--brand2)}
+.callout p{margin:0 0 8px}
+ul.clean{list-style:none;padding:0;margin:14px 0}
+ul.clean li{padding:10px 0 10px 30px;border-bottom:1px solid var(--line);position:relative}
+ul.clean li:before{content:"▸";position:absolute;left:6px;top:10px;color:var(--brand)}
+ul.clean li:last-child{border-bottom:none}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;margin-right:6px;vertical-align:middle}
+.tag.a{background:color-mix(in srgb,var(--brand2) 20%,transparent);color:var(--brand2)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.src{font-size:12.5px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:30px 0 60px;color:var(--muted);font-size:14px}
+footer a{color:var(--accent);text-decoration:none}
+.toggle{position:fixed;top:14px;right:14px;z-index:9;background:var(--surface);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer;box-shadow:var(--shadow)}
+.foot-note{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+</style>
+</head>
+<body>
+<button class="toggle" id="themeToggle" aria-label="Cambiar tema">◐ Tema</button>
+<div class="wrap">
+
+<header class="hero">
+  <span class="badge">● Observatorio · Datos ENUT 2024 (INEI)</span>
+  <h1>El tiempo invisible del agro</h1>
+  <p class="lede">Cuánto trabaja —y cuánto de eso <strong>sin paga</strong>— la gente del campo en el Perú. El trabajo agropecuario para autoconsumo y el cuidado del hogar no aparecen en las estadísticas agrarias, pero la <strong>Encuesta Nacional de Uso del Tiempo</strong> sí los mide.</p>
+  <p class="src-note">Fuente única: INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024. Población de 12 años y más. Horas y minutos por día, según tipo de día. <strong>Regla del observatorio: no se inventa ninguna cifra.</strong></p>
+</header>
+
+<div class="stats">
+  <div class="stat">
+    <div class="num">5 h 26 min</div>
+    <div class="lbl">Trabajo <strong>no remunerado</strong> al día de la <strong>mujer rural</strong> (doméstico + cuidados, día de semana)</div>
+  </div>
+  <div class="stat">
+    <div class="num">2,6×</div>
+    <div class="lbl">Más tiempo que el hombre rural en trabajo no remunerado (5 h 26 min vs. 2 h 06 min)</div>
+  </div>
+  <div class="stat alt">
+    <div class="num">≈ 10 h 09 min</div>
+    <div class="lbl">Carga total diaria de la mujer rural (ocupación + no remunerado) — supera al hombre rural (≈ 9 h 34 min)</div>
+  </div>
+  <div class="stat">
+    <div class="num">4 h 43 min</div>
+    <div class="lbl">Trabajo en la ocupación de la mujer rural —incluye producción agropecuaria para autoconsumo</div>
+  </div>
+</div>
+
+<section>
+  <h2>El trabajo no remunerado recae en la mujer rural</h2>
+  <p class="sub">Labores domésticas y de cuidado del hogar que nadie paga. En el campo la brecha de género es aún mayor que en la ciudad: la mujer rural dedica más tiempo que la urbana, y casi tres veces más que el hombre rural.</p>
+  <div class="card">
+    <h3>Trabajo no remunerado por área y sexo</h3>
+    <p class="hint">Horas:minutos por día. ENUT 2024, cuadro III.5.2.</p>
+    <div id="chartNoRem" class="chart"></div>
+  </div>
+</section>
+
+<section>
+  <h2>En la ocupación: el hombre más horas, pero la mujer también produce</h2>
+  <p class="sub">El "trabajo en la ocupación" incluye el empleo para el mercado <em>y</em> la producción de bienes para autoconsumo (agricultura, ganadería, pesca). En el campo, buena parte de este tiempo es trabajo familiar sin remuneración registrada.</p>
+  <div class="card">
+    <h3>Trabajo en la ocupación y producción por área y sexo</h3>
+    <p class="hint">Horas:minutos por día. ENUT 2024, cuadro III.4.2.</p>
+    <div id="chartOcup" class="chart"></div>
+  </div>
+</section>
+
+<section>
+  <h2>Carga global de trabajo: ellas trabajan más al sumar todo</h2>
+  <p class="sub">La <strong>carga global</strong> (concepto CEPAL) suma el trabajo en la ocupación y el trabajo no remunerado. A nivel nacional, las mujeres dedican más horas de trabajo total que los hombres, todos los días de la semana.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Trabajo total diario — nacional</h3>
+      <p class="hint">Horas:minutos por día. ENUT 2024.</p>
+      <div id="chartCarga" class="chart"></div>
+    </div>
+    <div class="card">
+      <h3>Suma rural (día de semana)</h3>
+      <p class="hint">Ocupación + no remunerado, cálculo sobre series ENUT 2024.</p>
+      <div id="chartRural" class="chart"></div>
+    </div>
+  </div>
+  <p class="foot-note">La "suma rural" combina las dos series de la ENUT (ocupación + no remunerado) para ilustrar la carga total en el campo; es un cálculo del observatorio, no una cifra publicada como tal por el INEI.</p>
+</section>
+
+<section>
+  <h2>¿Por qué le importa al sector agrario?</h2>
+  <p class="sub">Esto es lo que las estadísticas agrarias (CENAGRO, encuestas de producción, planillas) normalmente <strong>no capturan</strong> y la ENUT sí.</p>
+  <div class="callout">
+    <h3>El dato que el agro no mide</h3>
+    <p>La producción agropecuaria <strong>para autoconsumo</strong> —sembrar, cosechar, cuidar animales para el propio hogar— cuenta como trabajo en la ENUT, aunque no genere ingreso monetario ni figure como empleo formal. Gran parte de ese trabajo lo hacen <strong>mujeres y familiares sin remuneración</strong>, por eso quedan invisibles en las cifras del sector.</p>
+  </div>
+  <ul class="clean">
+    <li><span class="tag a">Política</span> Programas agrarios con enfoque de género: titulación de tierras, crédito y asistencia técnica dirigidos también a quien realmente trabaja la chacra.</li>
+    <li><span class="tag a">Cuidados</span> La doble jornada rural (chacra + hogar) justifica servicios de cuidado e infraestructura básica en zonas rurales.</li>
+    <li><span class="tag a">Medición</span> Integrar el uso del tiempo a las estadísticas agropecuarias para valorar el aporte económico del trabajo no remunerado del campo.</li>
+    <li><span class="tag a">Equidad</span> Visibilizar que la mujer rural soporta la mayor carga total de trabajo del país es base para cerrar brechas.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Los números, en una tabla</h2>
+  <p class="sub">Trabajo no remunerado y en la ocupación por área y sexo (día de semana). Horas:minutos por día.</p>
+  <table>
+    <thead><tr><th>Indicador (día de semana)</th><th>Mujer rural</th><th>Hombre rural</th><th>Mujer urbana</th><th>Hombre urbano</th></tr></thead>
+    <tbody>
+      <tr><td>Trabajo no remunerado</td><td>5 h 26 m</td><td>2 h 06 m</td><td>5 h 02 m</td><td>2 h 10 m</td></tr>
+      <tr><td>Trabajo en la ocupación</td><td>4 h 43 m</td><td>7 h 28 m</td><td>7 h 12 m</td><td>9 h 07 m</td></tr>
+      <tr><td>Carga total (suma)</td><td><strong>≈10 h 09 m</strong></td><td>≈9 h 34 m</td><td>≈12 h 14 m</td><td>≈11 h 17 m</td></tr>
+    </tbody>
+  </table>
+  <p class="src">Fuente: INEI — ENUT 2024, cuadros III.4.2 y III.5.2. La carga total es suma de ambas series (cálculo del observatorio).</p>
+</section>
+
+<footer class="wrap">
+  <p><strong>Fuente oficial:</strong> INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024, Principales Resultados.
+  <a href="https://www.gob.pe/institucion/inei/campa%C3%B1as/99771-resultados-de-la-encuesta-nacional-de-uso-del-tiempo-enut" target="_blank" rel="noopener">Ver en gob.pe ↗</a></p>
+  <p>Observatorio independiente de datos públicos. Las cifras provienen íntegramente de fuentes oficiales; no se inventan ni estiman valores. Última actualización: octubre 2026.</p>
+</footer>
+
+</div>
+<script>
+// ---- Datos ENUT 2024 (INEI). Valores decimales = horas; etiquetas reales en h:min ----
+const DIAS = ['Día de semana','Sábado','Domingo'];
+function hm(dec){const h=Math.floor(dec);const m=Math.round((dec-h)*60);return h+' h '+(m<10?'0'+m:m)+' m';}
+
+const noRem = {
+  ruralM:[5.433,5.567,5.900], ruralH:[2.100,2.533,3.467],
+  urbanoM:[5.033,5.100,5.050], urbanoH:[2.167,2.650,3.283]
+};
+const ocup = {
+  ruralM:[4.717,4.567,3.517], ruralH:[7.467,7.067,4.733],
+  urbanoM:[7.200,6.533,5.333], urbanoH:[9.117,8.117,6.200]
+};
+
+const css = getComputedStyle(document.documentElement);
+function col(n){return css.getPropertyValue(n).trim();}
+
+function baseGrid(){return {left:48,right:14,top:38,bottom:30};}
+function axisLabel(){return {color:col('--muted'),fontSize:11};}
+function fmtTip(p){let s=p[0].axisValue+'<br>';p.forEach(x=>{s+=x.marker+' '+x.seriesName+': <b>'+hm(x.value)+'</b><br>';});return s;}
+
+let charts=[];
+function mkGrouped(id, d, title){
+  const el=document.getElementById(id); const c=echarts.init(el);
+  c.setOption({
+    grid:baseGrid(),
+    legend:{data:['Mujer rural','Hombre rural','Mujer urbana','Hombre urbano'],top:0,textStyle:{color:col('--ink'),fontSize:11},itemWidth:12,itemHeight:12},
+    tooltip:{trigger:'axis',formatter:fmtTip,backgroundColor:col('--surface'),borderColor:col('--line'),textStyle:{color:col('--ink')}},
+    xAxis:{type:'category',data:DIAS,axisLabel:axisLabel(),axisLine:{lineStyle:{color:col('--line')}}},
+    yAxis:{type:'value',name:'h/día',nameTextStyle:{color:col('--muted'),fontSize:10},axisLabel:{...axisLabel(),formatter:'{value} h'},splitLine:{lineStyle:{color:col('--line')}}},
+    series:[
+      {name:'Mujer rural',type:'bar',data:d.ruralM,itemStyle:{color:col('--mujer')},barMaxWidth:26},
+      {name:'Hombre rural',type:'bar',data:d.ruralH,itemStyle:{color:col('--hombre')},barMaxWidth:26},
+      {name:'Mujer urbana',type:'bar',data:d.urbanoM,itemStyle:{color:col('--mujer'),opacity:.5},barMaxWidth:26},
+      {name:'Hombre urbano',type:'bar',data:d.urbanoH,itemStyle:{color:col('--hombre'),opacity:.5},barMaxWidth:26}
+    ]
+  });
+  charts.push(c);
+}
+
+function mkCarga(){
+  const c=echarts.init(document.getElementById('chartCarga'));
+  c.setOption({
+    grid:baseGrid(),
+    legend:{data:['Mujer','Hombre'],top:0,textStyle:{color:col('--ink')},itemWidth:12,itemHeight:12},
+    tooltip:{trigger:'axis',formatter:fmtTip,backgroundColor:col('--surface'),borderColor:col('--line'),textStyle:{color:col('--ink')}},
+    xAxis:{type:'category',data:['Día de semana','Fin de semana'],axisLabel:axisLabel(),axisLine:{lineStyle:{color:col('--line')}}},
+    yAxis:{type:'value',name:'h/día',nameTextStyle:{color:col('--muted'),fontSize:10},axisLabel:{...axisLabel(),formatter:'{value} h'},splitLine:{lineStyle:{color:col('--line')}}},
+    series:[
+      {name:'Mujer',type:'bar',data:[8.883,7.467],itemStyle:{color:col('--mujer')},barMaxWidth:46,label:{show:true,position:'top',formatter:p=>hm(p.value),color:col('--muted'),fontSize:11}},
+      {name:'Hombre',type:'bar',data:[8.417,6.500],itemStyle:{color:col('--hombre')},barMaxWidth:46,label:{show:true,position:'top',formatter:p=>hm(p.value),color:col('--muted'),fontSize:11}}
+    ]
+  });
+  charts.push(c);
+}
+
+function mkRural(){
+  const c=echarts.init(document.getElementById('chartRural'));
+  const mujer=[ocup.ruralM[0],noRem.ruralM[0]]; const hombre=[ocup.ruralH[0],noRem.ruralH[0]];
+  c.setOption({
+    grid:baseGrid(),
+    legend:{data:['Trabajo en la ocupación','Trabajo no remunerado'],top:0,textStyle:{color:col('--ink'),fontSize:11},itemWidth:12,itemHeight:12},
+    tooltip:{trigger:'axis',formatter:p=>{let t=p[0].axisValue+'<br>';let tot=0;p.forEach(x=>{t+=x.marker+' '+x.seriesName+': <b>'+hm(x.value)+'</b><br>';tot+=x.value;});t+='<b>Total: '+hm(tot)+'</b>';return t;},backgroundColor:col('--surface'),borderColor:col('--line'),textStyle:{color:col('--ink')}},
+    xAxis:{type:'category',data:['Mujer rural','Hombre rural'],axisLabel:axisLabel(),axisLine:{lineStyle:{color:col('--line')}}},
+    yAxis:{type:'value',name:'h/día',nameTextStyle:{color:col('--muted'),fontSize:10},axisLabel:{...axisLabel(),formatter:'{value} h'},splitLine:{lineStyle:{color:col('--line')}}},
+    series:[
+      {name:'Trabajo en la ocupación',type:'bar',stack:'t',data:[mujer[0],hombre[0]],itemStyle:{color:col('--urbano')},barMaxWidth:54},
+      {name:'Trabajo no remunerado',type:'bar',stack:'t',data:[mujer[1],hombre[1]],itemStyle:{color:col('--mujer')},barMaxWidth:54,label:{show:true,position:'top',formatter:p=>hm(p.value+(p.dataIndex===0?mujer[0]:hombre[0])),color:col('--ink'),fontSize:12,fontWeight:'bold'}}
+    ]
+  });
+  charts.push(c);
+}
+
+function renderAll(){
+  charts.forEach(c=>c.dispose()); charts=[];
+  mkGrouped('chartNoRem',noRem); mkGrouped('chartOcup',ocup); mkCarga(); mkRural();
+}
+renderAll();
+window.addEventListener('resize',()=>charts.forEach(c=>c.resize()));
+
+// Theme toggle
+const root=document.documentElement;
+try{const saved=localStorage.getItem('tap-theme'); if(saved) root.setAttribute('data-theme',saved);}catch(e){}
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const cur=root.getAttribute('data-theme');
+  const isDark = cur==='dark' || (!cur && matchMedia('(prefers-color-scheme: dark)').matches);
+  const next=isDark?'light':'dark';
+  root.setAttribute('data-theme',next);
+  try{localStorage.setItem('tap-theme',next);}catch(e){}
+  setTimeout(renderAll,30);
+});
+</script>
+</body>
+</html>
