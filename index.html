@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El tiempo invisible del agro · Observatorio del uso del tiempo rural (ENUT 2024)</title>
-<meta name="description" content="Cómo reparten sus 24 horas los hombres y mujeres del campo en el Perú, según la ENUT 2024 (INEI). El trabajo agropecuario para autoconsumo y de cuidados no remunerado que las estadísticas agrarias no miden.">
+<title>El tiempo invisible · El trabajo no remunerado en el Perú (ENUT 2024)</title>
+<meta name="description" content="Cuánto trabajo doméstico y de cuidados no remunerado sostiene los hogares del Perú, según la ENUT 2024 (INEI) — con un simulador que le pone precio a tus horas. La brecha de género es mayor en el campo.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="El tiempo invisible del agro">
-<meta property="og:description" content="ENUT 2024 (INEI): la mujer rural dedica 3,5 veces más tiempo que el hombre al trabajo no remunerado. El trabajo agropecuario de autoconsumo y de cuidados no aparece en las estadísticas agrarias.">
+<meta property="og:title" content="El tiempo invisible — el trabajo que no se ve ni se paga">
+<meta property="og:description" content="ENUT 2024 (INEI): la mujer rural dedica 3,5 veces más tiempo que el hombre al trabajo no remunerado. Incluye un simulador que valoriza en soles tu trabajo doméstico y de cuidados.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="og.png">
 <meta property="og:url" content="https://unimauro.github.io/tiempo-agrario-peru/">
@@ -142,6 +142,36 @@ section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
 .ledger li .k{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--madder);
   border:1px solid var(--madder);border-radius:5px;padding:3px 8px;white-space:nowrap;align-self:start}
 
+/* SIMULATOR */
+.sim{margin-top:26px;display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}
+@media(max-width:760px){.sim{grid-template-columns:1fr}}
+.sim .inputs,.sim .result{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.sim .result{position:sticky;top:16px}
+.field{margin-bottom:15px}
+.field > label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.modebtns{display:flex;gap:8px}
+.modebtn{flex:1;padding:9px;border:1px solid var(--line);background:var(--paper);color:var(--ink);
+  border-radius:9px;cursor:pointer;font:inherit;font-size:13.5px;transition:background .16s var(--e-out),border-color .16s var(--e-out),color .16s}
+.modebtn.on{background:var(--madder);color:#fff;border-color:var(--madder)}
+.sim input[type=number]{width:100%;background:var(--paper);border:1px solid var(--line);color:var(--ink);
+  border-radius:9px;padding:9px 11px;font:inherit;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.sim input[type=number]:focus-visible{border-color:var(--madder)}
+.actrow{display:grid;grid-template-columns:1fr 94px;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.actrow:last-child{border-bottom:none}
+.actrow .nm{font-size:13.5px;line-height:1.3}
+.actrow input[type=number]{text-align:right;padding:7px 9px}
+.result > label{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.result .rnum{font-size:clamp(32px,6vw,46px);font-weight:600;color:var(--madder);line-height:1;margin-top:6px}
+.result .rsub{font-size:13px;color:var(--faint);margin:6px 0 14px}
+.result .rrow{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:9px 0;border-top:1px solid var(--line)}
+.result .rrow span:first-child{color:var(--muted)}
+.simbtn{margin:10px 8px 0 0;background:transparent;border:1px solid var(--line);color:var(--ink);
+  border-radius:9px;padding:8px 13px;font:inherit;font-size:13px;cursor:pointer;transition:border-color .16s var(--e-out),background .16s}
+@media (hover:hover) and (pointer:fine){
+  .modebtn:hover{border-color:var(--madder)}
+  .simbtn:hover{border-color:var(--madder);background:var(--paper)}
+}
+
 table{width:100%;border-collapse:collapse;font-size:14px;margin-top:20px}
 th,td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:right}
 th:first-child,td:first-child{text-align:left}
@@ -187,7 +217,7 @@ footer a:hover{text-decoration:underline}
 
 <div class="wrap">
   <header class="top">
-    <span class="brand">El tiempo invisible del agro</span>
+    <span class="brand">El tiempo invisible</span>
     <button class="tbtn" id="themeToggle" aria-label="Cambiar tema claro/oscuro">◐ Tema</button>
   </header>
 
@@ -208,9 +238,9 @@ footer a:hover{text-decoration:underline}
         <ellipse cx="70" cy="128" rx="7" ry="13" transform="rotate(-28 70 128)"/>
       </g>
     </svg>
-    <span class="eyebrow"><span class="dot"></span> Observatorio del uso del tiempo rural · datos <b>ENUT 2024 (INEI)</b></span>
-    <h1>El tiempo invisible del agro</h1>
-    <p class="lede">Las estadísticas agrarias cuentan hectáreas y toneladas, pero no las horas. Así reparte sus 24 horas quien trabaja el campo en el Perú —y cuántas de esas horas no las paga nadie.</p>
+    <span class="eyebrow"><span class="dot"></span> Observatorio del trabajo no remunerado · datos <b>ENUT 2024 (INEI)</b></span>
+    <h1>El tiempo invisible</h1>
+    <p class="lede">Cocinar, limpiar, lavar, cuidar, acarrear agua. Horas de trabajo que sostienen cada hogar del Perú y que nadie paga ni cuenta. La Encuesta Nacional de Uso del Tiempo las mide: aquí las hacemos visibles —y les ponemos precio.</p>
   </div>
 
   <!-- 24h DAY STRIP (signature) -->
@@ -253,24 +283,66 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <!-- AGRARIAN LEDGER -->
+  <!-- WHY VALUE IT -->
   <section>
-    <span class="eyebrow"><span class="dot"></span> Para el sector agrario</span>
-    <h2>Lo que el agro no mide</h2>
-    <p class="sub">El CENAGRO y las encuestas de producción registran lo que se vende. La ENUT registra algo más: el trabajo que sostiene la chacra sin figurar en ninguna planilla.</p>
+    <span class="eyebrow"><span class="dot"></span> Por qué ponerle precio</span>
+    <h2>Trabajo real, con valor económico real</h2>
+    <p class="sub">El trabajo no remunerado no entra en el PBI ni en ninguna planilla, pero sin él nada funciona. Ponerle un número es el primer paso para repartirlo mejor —en casa y en la política pública.</p>
     <div class="ledger reveal">
       <div class="bar" id="openLedger" role="button" tabindex="0" aria-haspopup="dialog">
-        El dato que no aparece en las estadísticas agrarias → ver detalle
+        Qué mide (y qué no mide) la ENUT del Perú → ver detalle
       </div>
       <div class="body">
-        <p>La producción agropecuaria <b>para autoconsumo</b> —sembrar, cosechar, cuidar animales para el propio hogar— cuenta como trabajo en la ENUT aunque no genere ingreso ni empleo formal. Gran parte lo hacen mujeres y familiares <b>sin remuneración</b>: por eso son invisibles en las cifras del sector.</p>
+        <p>La ENUT peruana se centra en el <b>trabajo doméstico y de cuidados</b>: quién cocina, quién limpia, quién cuida a niñas, niños, enfermos y adultos mayores, cuánto se tarda en acarrear agua. Ese trabajo recae sobre todo en las mujeres —y en el campo, aún más.</p>
         <ul>
-          <li><span class="k">Política</span><span>Titulación de tierras, crédito y asistencia técnica dirigidos también a quien realmente trabaja la parcela.</span></li>
-          <li><span class="k">Cuidados</span><span>La doble jornada rural (chacra + hogar) justifica servicios de cuidado e infraestructura básica en el campo.</span></li>
-          <li><span class="k">Medición</span><span>Integrar el uso del tiempo a las estadísticas agropecuarias para valorar el aporte del trabajo no remunerado.</span></li>
+          <li><span class="k">Cuidados</span><span>Visibilizar la doble jornada (empleo + hogar) justifica servicios de cuidado e infraestructura básica, sobre todo en zonas rurales.</span></li>
+          <li><span class="k">Hogar</span><span>Poner en soles el aporte de cada persona abre una conversación —muchas veces evitada— sobre cómo se reparten las tareas en casa.</span></li>
+          <li><span class="k">Política</span><span>Un valor económico medible da sustento técnico para pedir presupuesto y diseñar políticas que reduzcan las brechas.</span></li>
         </ul>
       </div>
     </div>
+  </section>
+
+  <!-- SIMULATOR -->
+  <section id="simulador">
+    <span class="eyebrow"><span class="dot"></span> Simulador</span>
+    <h2>¿Cuánto vale tu trabajo no remunerado?</h2>
+    <p class="sub">Pon tus horas semanales en cada tarea. Lo valoramos con el sueldo mínimo —o con tu propio salario como costo de oportunidad— y te decimos cuánto aportas, en soles, cada mes.</p>
+    <div class="sim reveal">
+      <div class="inputs">
+        <div class="field">
+          <label>Valorar cada hora con…</label>
+          <div class="modebtns" role="group" aria-label="Base de valoración">
+            <button class="modebtn on" data-mode="min" type="button">Sueldo mínimo</button>
+            <button class="modebtn" data-mode="own" type="button">Mi salario</button>
+          </div>
+        </div>
+        <div class="field" id="rmvField">
+          <label for="rmv">Remuneración Mínima Vital (S/ al mes) · ajustable</label>
+          <input type="number" id="rmv" value="1025" min="0" step="25" inputmode="numeric">
+        </div>
+        <div class="field" id="ownField" hidden>
+          <label for="own">Tu salario mensual (S/)</label>
+          <input type="number" id="own" value="3000" min="0" step="100" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label>Horas por semana en cada actividad</label>
+          <div id="acts"></div>
+        </div>
+        <button class="simbtn" id="exampleBtn" type="button">Cargar ejemplo</button>
+        <button class="simbtn" id="clearBtn" type="button">Limpiar</button>
+      </div>
+      <div class="result" aria-live="polite">
+        <label>Tu trabajo no remunerado vale, al mes</label>
+        <div class="rnum mono" id="rMonth">S/ 0</div>
+        <div class="rsub" id="rNote">Agrega tus horas para ver el resultado.</div>
+        <div class="rrow"><span>Horas no remuneradas / semana</span><span class="mono" id="rHours">0</span></div>
+        <div class="rrow"><span>Valor por hora</span><span class="mono" id="rHourly">S/ 0,00</span></div>
+        <div class="rrow"><span>Al año</span><span class="mono" id="rYear">S/ 0</span></div>
+        <div class="rrow"><span>Equivale a</span><span class="mono" id="rMult">0 sueldos mín.</span></div>
+      </div>
+    </div>
+    <p class="srcline">Método: valor = horas/semana × 4,33 semanas × valor-hora. Valor-hora = ingreso mensual ÷ 208 horas (jornada de 48 h/semana). Valorización referencial del trabajo no remunerado (enfoque de costo de reemplazo / oportunidad), inspirada en el simulador del INEGI (México) y en la ENUT. La RMV es ajustable al valor vigente.</p>
   </section>
 
   <!-- CARGA GLOBAL -->
@@ -306,7 +378,8 @@ footer a:hover{text-decoration:underline}
 
   <footer>
     <p><b>Fuente oficial:</b> INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024, Principales Resultados. <a href="https://www.gob.pe/institucion/inei/campa%C3%B1as/99771-resultados-de-la-encuesta-nacional-de-uso-del-tiempo-enut" target="_blank" rel="noopener">Ver en gob.pe</a></p>
-    <p>Observatorio independiente de datos públicos · Las cifras provienen íntegramente de fuentes oficiales · Octubre 2026</p>
+    <p><b>Módulo 1 · Uso del tiempo (ENUT).</b> Próximo módulo: <b>Mujer en la agricultura</b>, con la Encuesta Nacional Agraria (ENA) del INEI — brechas de las productoras, pérdidas de cultivos y cortes por región.</p>
+    <p>Observatorio independiente de datos públicos · Las cifras provienen íntegramente de fuentes oficiales; el simulador es una valorización referencial · Octubre 2026</p>
   </footer>
 </div>
 
@@ -317,9 +390,9 @@ footer a:hover{text-decoration:underline}
     <h3 id="mTitle">¿Cómo se mide el tiempo?</h3>
     <p>La <b>ENUT</b> pregunta a las personas de 12 años y más cuánto tiempo dedicaron a cada actividad durante la semana. Los resultados se ordenan en tres grandes grupos cuya suma es un día completo.</p>
     <p><b>Tiempo social</b> — el que usa este observatorio en el reparto del día — promedia las horas sobre <b>toda la población</b>, haya hecho o no la actividad. Por eso las columnas suman ~24 h y se pueden comparar grupos directamente.</p>
-    <p>La ENUT también publica el tiempo <b>entre quienes sí realizan</b> cada actividad (cuadros III.4.2 y III.5.2), que arroja promedios más altos, p. ej. 5 h 26 min de trabajo no remunerado en la mujer rural. Ambas miradas son válidas: una compara poblaciones, la otra describe a quien hace la tarea.</p>
     <p><b>Trabajo no remunerado</b> incluye el doméstico, el de cuidados a integrantes del hogar y el apoyo a otros hogares y la comunidad. <b>En la ocupación y producción</b> incluye el empleo para el mercado y la producción de bienes para autoconsumo (agricultura, ganadería, pesca).</p>
-    <p class="srcline">INEI — ENUT 2024. Marco conceptual de carga global de trabajo: CEPAL.</p>
+    <p>La ENUT peruana se enfoca sobre todo en <b>cuidados y trabajo doméstico</b>. No es la fuente para el análisis agrario de fondo: ese trabajo —brechas de las mujeres productoras, pérdidas de cultivos— sale de la <b>Encuesta Nacional Agraria (ENA)</b>, que será un módulo aparte de este observatorio.</p>
+    <p class="srcline">INEI — ENUT 2024 (cuadros III.2.3.1 y III.2.3.2; el tiempo entre quienes realizan cada actividad está en los cuadros III.4.2 y III.5.2). Marco de carga global de trabajo: CEPAL.</p>
   </div>
 </div>
 
@@ -402,6 +475,67 @@ ledgerBtn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.prev
 document.getElementById('closeModal').addEventListener('click',closeModal);
 backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.contains('open'))closeModal();});
+
+/* ---- Simulador del trabajo no remunerado ---- */
+(function(){
+  const ACTS=[
+    ['a1','Preparación de alimentos'],
+    ['a2','Limpieza de la vivienda'],
+    ['a3','Lavado y cuidado de la ropa'],
+    ['a4','Compras y trámites del hogar'],
+    ['a5','Cuidado de niñas y niños'],
+    ['a6','Cuidado de personas enfermas o adultas mayores'],
+    ['a7','Acarreo de agua o leña']
+  ];
+  const MONTH_HOURS=208;        // 48 h/sem × 4.33 sem
+  const WEEKS=4.33;
+  const acts=document.getElementById('acts');
+  if(!acts) return;
+  acts.innerHTML=ACTS.map(([id,nm])=>
+    `<div class="actrow"><span class="nm">${nm}</span>`+
+    `<input type="number" id="${id}" min="0" max="120" step="0.5" value="0" inputmode="decimal" aria-label="${nm}, horas por semana"></div>`
+  ).join('');
+
+  const pen=new Intl.NumberFormat('es-PE',{style:'currency',currency:'PEN',maximumFractionDigits:0});
+  const pen2=new Intl.NumberFormat('es-PE',{style:'currency',currency:'PEN',minimumFractionDigits:2,maximumFractionDigits:2});
+  const num=new Intl.NumberFormat('es-PE',{maximumFractionDigits:1});
+  const $=id=>document.getElementById(id);
+  let mode='min';
+
+  function val(id){const v=parseFloat($(id).value);return isNaN(v)||v<0?0:v;}
+  function calc(){
+    const base = mode==='own' ? val('own') : val('rmv');
+    const hourly = base>0 ? base/MONTH_HOURS : 0;
+    const hrs = ACTS.reduce((s,[id])=>s+val(id),0);
+    const month = hrs*WEEKS*hourly;
+    $('rHours').textContent=num.format(hrs)+' h';
+    $('rHourly').textContent=pen2.format(hourly);
+    $('rMonth').textContent=pen.format(month);
+    $('rYear').textContent=pen.format(month*12);
+    const rmv=val('rmv');
+    const mult = rmv>0 ? month/rmv : 0;
+    $('rMult').textContent=num.format(mult)+(Math.abs(mult-1)<0.05?' sueldo mín.':' sueldos mín.');
+    $('rNote').textContent = hrs>0
+      ? `${num.format(hrs)} horas semanales de trabajo que no se pagan.`
+      : 'Agrega tus horas para ver el resultado.';
+  }
+
+  acts.addEventListener('input',calc);
+  ['rmv','own'].forEach(id=>$(id).addEventListener('input',calc));
+  document.querySelectorAll('.modebtn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.modebtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); mode=b.dataset.mode;
+    $('ownField').hidden = mode!=='own';
+    $('rmvField').hidden = false;   // la RMV siempre visible (sirve como referencia del multiplicador)
+    calc();
+  }));
+  $('exampleBtn').addEventListener('click',()=>{
+    const ex={a1:10,a2:7,a3:5,a4:3,a5:10,a6:2,a7:1};   // ejemplo ilustrativo, no es un dato oficial
+    ACTS.forEach(([id])=>$(id).value=ex[id]??0); calc();
+  });
+  $('clearBtn').addEventListener('click',()=>{ACTS.forEach(([id])=>$(id).value=0);calc();});
+  calc();
+})();
 
 /* ---- Theme ---- */
 const root=document.documentElement;
