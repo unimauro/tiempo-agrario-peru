@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Georgia, 'Times New Roman', serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1f12"/>
+      <stop offset="1" stop-color="#4a3418"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- franja -->
+  <rect x="0" y="0" width="14" height="630" fill="#b4472e"/>
+  <text x="80" y="110" fill="#e0b268" font-size="26" letter-spacing="3" font-family="Arial, sans-serif">OBSERVATORIO · ENUT 2024 (INEI)</text>
+  <text x="76" y="230" fill="#fffdf8" font-size="88" font-weight="700">El tiempo invisible</text>
+  <text x="76" y="330" fill="#fffdf8" font-size="88" font-weight="700">del agro</text>
+  <text x="80" y="410" fill="#d8cfbf" font-size="34" font-family="Arial, sans-serif">El trabajo rural —y de cuidados— que no paga nadie</text>
+  <text x="80" y="455" fill="#d8cfbf" font-size="34" font-family="Arial, sans-serif">y que las estadísticas agrarias no miden.</text>
+  <!-- stat destacada -->
+  <g transform="translate(80,510)">
+    <text x="0" y="60" fill="#e08064" font-size="78" font-weight="700" font-family="Arial, sans-serif">3,5× más tiempo</text>
+    <text x="0" y="98" fill="#a79b86" font-size="26" font-family="Arial, sans-serif">en trabajo no remunerado: mujer rural 5 h 15 min vs. hombre 1 h 30 min</text>
+  </g>
+  <!-- icono reloj+brote -->
+  <g transform="translate(980,470) scale(2.1)">
+    <circle cx="32" cy="30" r="17" fill="none" stroke="#f7f4ee" stroke-width="3.5"/>
+    <path d="M32 30 L32 19" stroke="#f7f4ee" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M32 30 L40 34" stroke="#e0b268" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M26 52 q6 -10 12 0" fill="none" stroke="#6cc49a" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="32" cy="46" r="3" fill="#6cc49a"/>
+  </g>
+</svg>
