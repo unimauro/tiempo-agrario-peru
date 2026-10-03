@@ -174,6 +174,11 @@ section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
 .result .rrow span:first-child{color:var(--muted)}
 .simbtn{margin:10px 8px 0 0;background:transparent;border:1px solid var(--line);color:var(--ink);
   border-radius:9px;padding:8px 13px;font:inherit;font-size:13px;cursor:pointer;transition:border-color .16s var(--e-out),background .16s}
+.simbar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--line);margin:18px 0 7px;gap:1px}
+.simbar i{height:100%;display:block;transition:width .4s var(--e-out)}
+.simbar-cap{font-size:12px;color:var(--faint);margin-bottom:4px}
+.sharerow{display:flex;align-items:center;margin-top:12px}
+.sharemsg{font-size:13px;color:var(--green);margin-left:4px;font-weight:600}
 @media (hover:hover) and (pointer:fine){
   .modebtn:hover{border-color:var(--madder)}
   .simbtn:hover{border-color:var(--madder);background:var(--paper)}
@@ -353,6 +358,13 @@ footer a:hover{text-decoration:underline}
         <div class="rrow"><span>Valor por hora</span><span class="mono" id="rHourly">S/ 0,00</span></div>
         <div class="rrow"><span>Al año</span><span class="mono" id="rYear">S/ 0</span></div>
         <div class="rrow"><span>Equivale a</span><span class="mono" id="rMult">0 sueldos mín.</span></div>
+        <div class="simbar" id="simBar" aria-hidden="true"></div>
+        <div class="simbar-cap" id="simCap">Reparte tus horas para ver el desglose por actividad.</div>
+        <div class="rrow"><span>Referencia ENUT · mujer rural</span><span class="mono">36,8 h/sem</span></div>
+        <div class="sharerow">
+          <button class="simbtn" id="shareBtn" type="button">Copiar mi resultado</button>
+          <span class="sharemsg" id="shareMsg" role="status" hidden>¡Copiado!</span>
+        </div>
       </div>
     </div>
     <p class="srcline">Método: valor = horas/semana × 4,33 semanas × valor-hora. Valor-hora = ingreso mensual ÷ 208 horas (jornada de 48 h/semana). Valorización referencial del trabajo no remunerado (enfoque de costo de reemplazo / oportunidad), inspirada en el simulador del INEGI (México) y en la ENUT. La RMV es ajustable al valor vigente.</p>
@@ -554,6 +566,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.
     `<input type="number" id="${id}" min="0" max="120" step="0.5" value="0" inputmode="decimal" aria-label="${nm}, horas por semana"></div>`
   ).join('');
 
+  const COLORS=['#9e2b1e','#bf8a2d','#3a6b50','#8a6d3b','#a8554a','#6b7d57','#9a8255'];
   const pen=new Intl.NumberFormat('es-PE',{style:'currency',currency:'PEN',maximumFractionDigits:0});
   const pen2=new Intl.NumberFormat('es-PE',{style:'currency',currency:'PEN',minimumFractionDigits:2,maximumFractionDigits:2});
   const num=new Intl.NumberFormat('es-PE',{maximumFractionDigits:1});
@@ -576,6 +589,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.
     $('rNote').textContent = hrs>0
       ? `${num.format(hrs)} horas semanales de trabajo que no se pagan.`
       : 'Agrega tus horas para ver el resultado.';
+    // Desglose por actividad (ancho = % del valor mensual)
+    const bar=$('simBar');
+    if(hrs>0){
+      bar.innerHTML=ACTS.map(([id,nm],i)=>{
+        const h=val(id); if(h<=0) return '';
+        const pct=h/hrs*100; const v=h*WEEKS*hourly;
+        return `<i style="width:${pct}%;background:${COLORS[i]}" title="${nm}: ${pen.format(v)}/mes (${num.format(h)} h/sem)"></i>`;
+      }).join('');
+      const top=[...ACTS].map(([id,nm],i)=>[nm,val(id)]).filter(a=>a[1]>0).sort((a,b)=>b[1]-a[1])[0];
+      $('simCap').textContent = top ? `Lo que más pesa: ${top[0].toLowerCase()}. Pasa el cursor por la barra para ver cada actividad.` : '';
+    } else { bar.innerHTML=''; $('simCap').textContent='Reparte tus horas para ver el desglose por actividad.'; }
   }
 
   acts.addEventListener('input',calc);
@@ -592,6 +616,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.
     ACTS.forEach(([id])=>$(id).value=ex[id]??0); calc();
   });
   $('clearBtn').addEventListener('click',()=>{ACTS.forEach(([id])=>$(id).value=0);calc();});
+  $('shareBtn').addEventListener('click',async()=>{
+    const txt=`Mi trabajo no remunerado vale ${$('rMonth').textContent} al mes (${$('rYear').textContent} al año) según «El tiempo invisible» — ENUT 2024. https://unimauro.github.io/tiempo-agrario-peru/`;
+    const done=()=>{const m=$('shareMsg');m.hidden=false;setTimeout(()=>m.hidden=true,2200);};
+    try{
+      if(navigator.share){ await navigator.share({title:'El tiempo invisible',text:txt}); }
+      else { await navigator.clipboard.writeText(txt); done(); }
+    }catch(e){ try{ await navigator.clipboard.writeText(txt); done(); }catch(_){ } }
+  });
   calc();
 })();
 
