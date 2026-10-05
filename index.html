@@ -64,8 +64,17 @@ a{color:var(--madder)}
 .eyebrow b{color:var(--madder);font-weight:600}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--madder);display:inline-block}
 
-header.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
-header.top .brand{font-family:Bitter;font-weight:700;font-size:15px}
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 85%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topin{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:11px 20px}
+.topin .brand{font-family:Bitter;font-weight:700;font-size:15px;white-space:nowrap}
+.nav{display:flex;gap:2px;margin-left:auto}
+.nav a{font-size:13.5px;color:var(--muted);text-decoration:none;padding:6px 11px;border-radius:8px;transition:color .16s var(--e-out),background .16s}
+.nav a.on{color:var(--ink);font-weight:500}
+@media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--ink);background:var(--panel)}}
+.topin .tbtn{margin-left:2px}
+@media(max-width:640px){ .nav{display:none} .topin .tbtn{margin-left:auto} }
+[id]{scroll-margin-top:62px}
 .tbtn{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;
   padding:7px 12px;font:inherit;font-size:13px;cursor:pointer;transition:background .18s var(--e-out),border-color .18s}
 .tbtn:hover{background:var(--panel);border-color:var(--madder)}
@@ -106,6 +115,11 @@ header.top .brand{font-family:Bitter;font-weight:700;font-size:15px}
 .keyfig .big{font-family:"IBM Plex Mono",monospace;font-size:clamp(40px,8vw,64px);font-weight:600;color:var(--madder);line-height:1}
 .keyfig .gloss{font-size:16px;color:var(--muted);max-width:44ch}
 .keyfig .gloss b{color:var(--ink);font-weight:600}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 4px}
+@media(max-width:680px){.chips{grid-template-columns:1fr}}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+.chip .cn{display:block;font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:600;color:var(--madder);line-height:1}
+.chip .ct{display:block;font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.4}
 
 section{padding:52px 0 8px}
 section > .eyebrow{margin-bottom:12px}
@@ -227,11 +241,21 @@ footer a:hover{text-decoration:underline}
 </head>
 <body>
 
-<div class="wrap">
-  <header class="top">
+<div class="topbar">
+  <div class="topin">
     <span class="brand">El tiempo invisible</span>
+    <nav class="nav" id="nav">
+      <a href="#explora">El día</a>
+      <a href="#simulador">Simulador</a>
+      <a href="#finde">Fin de semana</a>
+      <a href="#carga">Carga global</a>
+      <a href="#fuentes">Fuentes</a>
+    </nav>
     <button class="tbtn" id="themeToggle" aria-label="Cambiar tema claro/oscuro">◐ Tema</button>
-  </header>
+  </div>
+</div>
+
+<div class="wrap">
 
   <!-- HERO -->
   <div class="hero">
@@ -283,8 +307,15 @@ footer a:hover{text-decoration:underline}
     <p class="gloss">En el campo, la mujer dedica <b>5 h 15 min</b> al día a trabajo no remunerado; el hombre, <b>1 h 30 min</b>. Es la brecha de género más ancha del país en el reparto del tiempo.</p>
   </div>
 
+  <!-- NATIONAL CONTEXT CHIPS -->
+  <div class="chips reveal">
+    <div class="chip" style="--i:0"><span class="cn">4 h 48</span><span class="ct">de trabajo no remunerado al día — mujer, promedio <b>nacional</b></span></div>
+    <div class="chip" style="--i:1"><span class="cn">3×</span><span class="ct">el tiempo que le dedica el hombre a nivel nacional (<b>1 h 35 min</b>)</span></div>
+    <div class="chip" style="--i:2"><span class="cn">8 h 53</span><span class="ct">de trabajo total diario de la mujer — más que el hombre (<b>8 h 25</b>)</span></div>
+  </div>
+
   <!-- COMPARISON CHART -->
-  <section>
+  <section id="explora">
     <span class="eyebrow"><span class="dot"></span> Campo y ciudad</span>
     <h2>Las mismas 24 horas, repartidas muy distinto</h2>
     <p class="sub">Cada barra es un día completo. Lo que cambia entre hombres y mujeres —y entre campo y ciudad— es cuánto de ese día es trabajo que nadie paga.</p>
@@ -370,8 +401,20 @@ footer a:hover{text-decoration:underline}
     <p class="srcline">Método: valor = horas/semana × 4,33 semanas × valor-hora. Valor-hora = ingreso mensual ÷ 208 horas (jornada de 48 h/semana). Valorización referencial del trabajo no remunerado (enfoque de costo de reemplazo / oportunidad), inspirada en el simulador del INEGI (México) y en la ENUT. La RMV es ajustable al valor vigente.</p>
   </section>
 
+  <!-- WEEKEND LINE CHART -->
+  <section id="finde">
+    <span class="eyebrow"><span class="dot"></span> Entre semana y fin de semana</span>
+    <h2>El fin de semana no es descanso para ellas</h2>
+    <p class="sub">El trabajo no remunerado de las mujeres no baja el sábado ni el domingo —en el campo incluso sube. El de los hombres apenas crece hacia el fin de semana, y aun así se mantiene muy por debajo.</p>
+    <div class="panel reveal">
+      <h3>Trabajo no remunerado por tipo de día</h3>
+      <p class="hint">Horas por día entre quienes realizan la actividad. ENUT 2024 (INEI), cuadro III.5.2.</p>
+      <div id="chartWeek" class="chart"></div>
+    </div>
+  </section>
+
   <!-- CARGA GLOBAL -->
-  <section>
+  <section id="carga">
     <span class="eyebrow"><span class="dot"></span> Carga global de trabajo</span>
     <h2>Al sumar todo, ellas trabajan más</h2>
     <p class="sub">La carga global (concepto CEPAL) suma el trabajo en la ocupación y el no remunerado. En el campo, la mujer termina con más horas de trabajo total que el hombre.</p>
@@ -401,7 +444,7 @@ footer a:hover{text-decoration:underline}
     </div>
   </section>
 
-  <footer>
+  <footer id="fuentes">
     <p><b>Fuente oficial:</b> INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024, Principales Resultados. <a href="https://www.gob.pe/institucion/inei/campa%C3%B1as/99771-resultados-de-la-encuesta-nacional-de-uso-del-tiempo-enut" target="_blank" rel="noopener">Ver en gob.pe</a></p>
     <p><b>Módulo 1 · Uso del tiempo (ENUT).</b> Próximo módulo: <b>Mujer en la agricultura</b>, con la Encuesta Nacional Agraria (ENA) del INEI — brechas de las productoras, pérdidas de cultivos y cortes por región.</p>
     <p>Observatorio independiente de datos públicos · Las cifras provienen íntegramente de fuentes oficiales; el simulador es una valorización referencial · Octubre 2026</p>
@@ -498,7 +541,47 @@ function moveInd(){
   moveInd(); setTimeout(moveInd,350);   // reposition after fonts settle
 })();
 renderTab('dia');
-window.addEventListener('resize',()=>{chart&&chart.resize();moveInd();});
+
+/* ---- Gráfico de fin de semana (línea, por tipo de día) ---- */
+const weekDays=['Día de semana','Sábado','Domingo'];
+const wk={'Mujer rural':[5.433,5.567,5.900],'Mujer urbana':[5.033,5.100,5.050],
+          'Hombre rural':[2.100,2.533,3.467],'Hombre urbano':[2.167,2.650,3.283]};
+let chartW;
+function drawWeek(){
+  const el=document.getElementById('chartWeek'); if(typeof echarts==='undefined'||!el) return;
+  if(!chartW) chartW=echarts.init(el);
+  const label={color:C('--muted'),fontSize:12,fontFamily:'IBM Plex Sans'};
+  const mk=(name,data,color,dash)=>({name,type:'line',data,symbol:'circle',symbolSize:8,
+    lineStyle:{width:dash?2:3.2,type:dash?'dashed':'solid',color},itemStyle:{color},
+    emphasis:{focus:'series'},animationDuration:reduce?0:750,animationEasing:'cubicOut'});
+  chartW.setOption({
+    grid:{left:14,right:30,top:34,bottom:26,containLabel:true},
+    legend:{top:0,textStyle:{color:C('--ink'),fontSize:11},icon:'roundRect',itemWidth:16,itemHeight:7},
+    tooltip:{trigger:'axis',backgroundColor:C('--panel'),borderColor:C('--line'),textStyle:{color:C('--ink')},
+      formatter:p=>{let s='<b>'+p[0].axisValue+'</b><br>';p.forEach(x=>s+=x.marker+' '+x.seriesName+': <b>'+hm(x.value)+'</b><br>');return s;}},
+    xAxis:{type:'category',data:weekDays,boundaryGap:false,axisLabel:label,axisLine:{lineStyle:{color:C('--line')}},axisTick:{show:false}},
+    yAxis:{type:'value',min:0,max:7,interval:1,axisLabel:{...label,formatter:'{value} h'},splitLine:{lineStyle:{color:C('--line')}}},
+    series:[
+      mk('Mujer rural',wk['Mujer rural'],C('--madder'),false),
+      mk('Mujer urbana',wk['Mujer urbana'],C('--madder-soft'),true),
+      mk('Hombre rural',wk['Hombre rural'],C('--green'),false),
+      mk('Hombre urbano',wk['Hombre urbano'],C('--green'),true)
+    ]
+  });
+}
+drawWeek();
+window.addEventListener('resize',()=>{chart&&chart.resize();chartW&&chartW.resize();moveInd();});
+
+/* ---- Scroll-spy para la nav ---- */
+(function(){
+  const links=[...document.querySelectorAll('#nav a')];
+  if(!links.length) return;
+  const map={}; links.forEach(a=>{const t=document.querySelector(a.getAttribute('href'));if(t)map[t.id]=a;});
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+    links.forEach(a=>a.classList.remove('on')); if(map[e.target.id])map[e.target.id].classList.add('on');
+  }});},{rootMargin:'-45% 0px -50% 0px'});
+  Object.keys(map).forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+})();
 
 /* ---- Conteo animado del 3,5× (una vez, al entrar en viewport) ---- */
 (function(){
@@ -635,7 +718,7 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
   const dark=cur==='dark'||(!cur&&matchMedia('(prefers-color-scheme: dark)').matches);
   const next=dark?'light':'dark';root.setAttribute('data-theme',next);
   try{localStorage.setItem('tap-theme',next);}catch(e){}
-  setTimeout(()=>{renderTab(currentTab);moveInd();},40);
+  setTimeout(()=>{renderTab(currentTab);drawWeek();moveInd();},40);
 });
 </script>
 </body>
