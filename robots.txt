@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://unimauro.github.io/tiempo-peru/sitemap.xml

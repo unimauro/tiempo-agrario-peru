@@ -32,6 +32,31 @@
 <meta name="twitter:title" content="Tiempo Perú — el trabajo que no se ve ni se paga">
 <meta name="twitter:description" content="ENUT 2024 (INEI): la mujer rural dedica 3,5× más tiempo que el hombre al trabajo no remunerado. Con un simulador que lo valoriza en soles.">
 <meta name="twitter:image" content="https://unimauro.github.io/tiempo-peru/og.png?v=2">
+<link rel="canonical" href="https://unimauro.github.io/tiempo-peru/">
+<meta name="theme-color" content="#f5f0e2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1810" media="(prefers-color-scheme: dark)">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Tiempo Perú",
+  "alternateName": "El tiempo invisible",
+  "url": "https://unimauro.github.io/tiempo-peru/",
+  "inLanguage": "es-PE",
+  "description": "Observatorio del trabajo no remunerado y de cuidados en el Perú, con datos de la ENUT 2024 (INEI) y un simulador que lo valoriza en soles.",
+  "creator": [
+    { "@type": "Person", "name": "Kely Alfaro" },
+    { "@type": "Person", "name": "Carlos Cárdenas Fernández" }
+  ],
+  "about": {
+    "@type": "Dataset",
+    "name": "Encuesta Nacional de Uso del Tiempo (ENUT) 2024",
+    "creator": { "@type": "GovernmentOrganization", "name": "Instituto Nacional de Estadística e Informática (INEI)" },
+    "temporalCoverage": "2024",
+    "spatialCoverage": "Perú"
+  }
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -66,7 +91,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;color:var(--ink);
+body{margin:0;color:var(--ink);overflow-x:clip;
   font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
   /* luz de amanecer cálida sobre el campo — limpio, sin textura ruidosa */
   background:
@@ -93,7 +118,7 @@ a{color:var(--madder)}
 .nav a.on{color:var(--ink);font-weight:500}
 @media (hover:hover) and (pointer:fine){.nav a:hover{color:var(--ink);background:var(--panel)}}
 .topin .tbtn{margin-left:2px}
-@media(max-width:640px){ .nav{display:none} .topin .tbtn{margin-left:auto} }
+@media(max-width:640px){ .nav{display:none} .topin{gap:8px} .topin #shareSite{margin-left:auto} .tbtn .lbl{display:none} .tbtn{padding:7px 10px} }
 [id]{scroll-margin-top:62px}
 .tbtn{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;
   padding:7px 12px;font:inherit;font-size:13px;cursor:pointer;transition:background .18s var(--e-out),border-color .18s}
@@ -218,7 +243,8 @@ section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
   .simbtn:hover{border-color:var(--madder);background:var(--paper)}
 }
 
-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:20px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:20px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
 th,td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:right}
 th:first-child,td:first-child{text-align:left}
 thead th{font-size:12px;color:var(--faint);font-weight:600;border-bottom:1.5px solid var(--line)}
@@ -293,7 +319,8 @@ footer a:hover{text-decoration:underline}
       <a href="#equipo">Apoyo</a>
       <a href="#fuentes">Fuentes</a>
     </nav>
-    <button class="tbtn" id="themeToggle" aria-label="Cambiar tema claro/oscuro">◐ Tema</button>
+    <button class="tbtn" id="shareSite" aria-label="Compartir este observatorio">↗ <span class="lbl">Compartir</span></button>
+    <button class="tbtn" id="themeToggle" aria-label="Cambiar tema claro/oscuro">◐ <span class="lbl">Tema</span></button>
   </div>
 </div>
 
@@ -473,6 +500,7 @@ footer a:hover{text-decoration:underline}
     <h2>El día entero, en una tabla</h2>
     <p class="sub">Tiempo social, día de semana. Horas y minutos por día. Cada columna suma aproximadamente 24 horas.</p>
     <div class="reveal">
+    <div class="tablewrap">
     <table>
       <thead><tr><th>Actividad</th><th>Mujer rural</th><th>Hombre rural</th><th>Mujer urbana</th><th>Hombre urbano</th></tr></thead>
       <tbody>
@@ -482,6 +510,7 @@ footer a:hover{text-decoration:underline}
         <tr class="total"><td>Trabajo total (ocupación + no remunerado)</td><td class="mono">8 h 45</td><td class="mono">7 h 46</td><td class="mono">8 h 29</td><td class="mono">7 h 55</td></tr>
       </tbody>
     </table>
+    </div>
     <p class="srcline">Fuente: INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024, gráficos III.2.3.1 y III.2.3.2. No se inventan cifras; "trabajo total" es la suma de dos filas de la fuente. <a href="#" id="openMethod">¿Cómo se mide?</a></p>
     </div>
   </section>
@@ -786,6 +815,19 @@ document.querySelectorAll('.pay[data-copy]').forEach(b=>b.addEventListener('clic
     const m=document.getElementById('copyMsg'); if(m){m.textContent='¡Número copiado! '+b.dataset.copy;m.hidden=false;setTimeout(()=>m.hidden=true,2200);} }
   catch(e){}
 }));
+
+/* ---- Compartir el sitio ---- */
+(function(){
+  const btn=document.getElementById('shareSite'); if(!btn) return;
+  const url='https://unimauro.github.io/tiempo-peru/';
+  const data={title:'Tiempo Perú — El tiempo invisible',text:'El trabajo doméstico y de cuidados que no se ve ni se paga, en datos (ENUT 2024).',url};
+  btn.addEventListener('click',async()=>{
+    try{
+      if(navigator.share){ await navigator.share(data); }
+      else { await navigator.clipboard.writeText(url); const o=btn.innerHTML; btn.textContent='✓ Copiado'; setTimeout(()=>btn.innerHTML=o,2000); }
+    }catch(e){ try{ await navigator.clipboard.writeText(url); const o=btn.innerHTML; btn.textContent='✓ Copiado'; setTimeout(()=>btn.innerHTML=o,2000);}catch(_){ } }
+  });
+})();
 
 /* ---- Theme ---- */
 const root=document.documentElement;
