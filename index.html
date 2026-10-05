@@ -312,7 +312,10 @@ footer a:hover{text-decoration:underline}
 @keyframes chatin{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 .chat-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--madder);color:#fff}
 .chat-ident{font-family:Bitter;font-weight:600;font-size:15px}
-.chat-close{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 2px}
+.chat-close{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;width:36px;height:36px;
+  border-radius:9px;display:inline-flex;align-items:center;justify-content:center;transition:background .15s var(--e-out)}
+@media (hover:hover) and (pointer:fine){.chat-close:hover{background:rgba(255,255,255,.2)}}
+.chat-close:active{background:rgba(255,255,255,.3)}
 .chat-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--panel)}
 .msg{max-width:86%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5;word-wrap:break-word}
 .msg.bot{background:var(--paper);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
@@ -975,6 +978,9 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
     $("chatClose").addEventListener("click",()=>toggle(false));
     $("chatForm").addEventListener("submit",(e)=>{e.preventDefault();const i=$("chatInput"),v=i.value;i.value="";handle(v);});
     document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&open)toggle(false);});
+    // cerrar al hacer clic fuera del panel (el FAB abre; su clic no cuenta como "fuera")
+    document.addEventListener("click",(e)=>{const p=$("chatPanel"),f=$("chatFab");
+      if(open&&p&&!p.contains(e.target)&&f&&!f.contains(e.target))toggle(false);});
     greet(); // pre-carga el saludo + sugerencias para que el panel nunca se vea vacío
   }
   if(document.readyState!=="loading")init();else document.addEventListener("DOMContentLoaded",init);
