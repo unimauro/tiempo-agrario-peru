@@ -12,6 +12,14 @@
 <meta property="og:image" content="og.png">
 <meta property="og:url" content="https://unimauro.github.io/tiempo-peru/">
 <script>try{var _t=localStorage.getItem('tap-theme');document.documentElement.setAttribute('data-theme',_t||'light');}catch(e){document.documentElement.setAttribute('data-theme','light');}</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ4VQH54X9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-YJ4VQH54X9');
+</script>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -208,6 +216,27 @@ tbody td.mono{font-family:"IBM Plex Mono",monospace}
 tr.total td{font-weight:600;color:var(--ink)}
 .srcline{font-size:12.5px;color:var(--faint);margin-top:14px}
 
+/* EQUIPO + APOYO */
+.support{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+@media(max-width:720px){.support{grid-template-columns:1fr}}
+.cardbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.cardbox h3{font-size:16px;margin-bottom:6px}
+.team-list{list-style:none;padding:0;margin:10px 0 0}
+.team-list li{display:flex;gap:13px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.team-list li:first-child{border-top:none}
+.team-list .av{width:42px;height:42px;border-radius:50%;background:var(--madder);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:Bitter;font-weight:700;font-size:15px;flex:0 0 auto}
+.team-list .nm{font-weight:600;font-size:15px}
+.team-list .ro{font-size:13px;color:var(--muted)}
+.pays{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.pay{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;
+  padding:9px 13px;font:inherit;font-size:14px;cursor:pointer;background:var(--paper);color:var(--ink);
+  text-decoration:none;transition:border-color .16s var(--e-out),transform .16s var(--e-out),box-shadow .16s var(--e-out)}
+@media (hover:hover) and (pointer:fine){.pay:hover{border-color:var(--madder);transform:translateY(-2px);box-shadow:var(--shadow-lift)}}
+.pay .ic{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.pay small{color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.copymsg{display:inline-block;font-size:13px;color:var(--green);font-weight:600;margin-top:10px}
+
 footer{margin-top:56px;border-top:1px solid var(--line);padding:30px 0 70px;color:var(--muted);font-size:14px}
 footer a{color:var(--madder);text-decoration:none}
 footer a:hover{text-decoration:underline}
@@ -251,6 +280,7 @@ footer a:hover{text-decoration:underline}
       <a href="#simulador">Simulador</a>
       <a href="#finde">Fin de semana</a>
       <a href="#carga">Carga global</a>
+      <a href="#equipo">Apoyo</a>
       <a href="#fuentes">Fuentes</a>
     </nav>
     <button class="tbtn" id="themeToggle" aria-label="Cambiar tema claro/oscuro">◐ Tema</button>
@@ -443,6 +473,33 @@ footer a:hover{text-decoration:underline}
       </tbody>
     </table>
     <p class="srcline">Fuente: INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024, gráficos III.2.3.1 y III.2.3.2. No se inventan cifras; "trabajo total" es la suma de dos filas de la fuente. <a href="#" id="openMethod">¿Cómo se mide?</a></p>
+    </div>
+  </section>
+
+  <!-- EQUIPO + APOYO -->
+  <section id="equipo">
+    <span class="eyebrow"><span class="dot"></span> Equipo y apoyo</span>
+    <h2>Quiénes lo hacen —y cómo ayudar</h2>
+    <p class="sub">Un proyecto abierto y sin fines de lucro. Tu apoyo cubre hosting, datos y el tiempo de mantenerlo vivo.</p>
+    <div class="support reveal">
+      <div class="cardbox">
+        <h3>Equipo</h3>
+        <ul class="team-list">
+          <li><span class="av">CC</span><span><span class="nm">Carlos Cárdenas Fernández</span><br><span class="ro">Dirección, tecnología y datos</span></span></li>
+          <li><span class="av" style="background:var(--green)">KA</span><span><span class="nm">Kely Alfaro</span><br><span class="ro">Investigación, datos y enfoque de género</span></span></li>
+        </ul>
+      </div>
+      <div class="cardbox">
+        <h3>Apóyalo</h3>
+        <p class="hint" style="margin:2px 0 0">Yape y Plin: toca para copiar el número. PayPal y café abren en otra pestaña.</p>
+        <div class="pays">
+          <button class="pay" type="button" data-copy="940584307"><span class="ic" style="background:#742284"></span> Yape <small>940584307</small></button>
+          <button class="pay" type="button" data-copy="940584307"><span class="ic" style="background:#00b2a9"></span> Plin <small>940584307</small></button>
+          <a class="pay" href="https://www.paypal.com/paypalme/unimauro" target="_blank" rel="noopener"><span class="ic" style="background:#003087"></span> PayPal</a>
+          <a class="pay" href="https://buymeacoffee.com/unimauro" target="_blank" rel="noopener"><span class="ic" style="background:#ffdd00"></span> Buy me a coffee ☕</a>
+        </div>
+        <span class="copymsg" id="copyMsg" role="status" hidden>¡Número copiado!</span>
+      </div>
     </div>
   </section>
 
@@ -711,6 +768,13 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.
   });
   calc();
 })();
+
+/* ---- Apoyo: copiar número Yape/Plin ---- */
+document.querySelectorAll('.pay[data-copy]').forEach(b=>b.addEventListener('click',async()=>{
+  try{ await navigator.clipboard.writeText(b.dataset.copy);
+    const m=document.getElementById('copyMsg'); if(m){m.textContent='¡Número copiado! '+b.dataset.copy;m.hidden=false;setTimeout(()=>m.hidden=true,2200);} }
+  catch(e){}
+}));
 
 /* ---- Theme ---- */
 const root=document.documentElement;
