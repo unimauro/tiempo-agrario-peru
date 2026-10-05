@@ -348,8 +348,8 @@ footer a:hover{text-decoration:underline}
       <a href="#simulador">Simulador</a>
       <a href="#finde">Fin de semana</a>
       <a href="#carga">Carga global</a>
+      <a href="agro.html">Mujer en el agro</a>
       <a href="#equipo">Apoyo</a>
-      <a href="#fuentes">Fuentes</a>
     </nav>
     <button class="tbtn" id="shareSite" aria-label="Compartir este observatorio">↗ <span class="lbl">Compartir</span></button>
     <button class="tbtn" id="themeToggle" aria-label="Cambiar tema claro/oscuro">◐ <span class="lbl">Tema</span></button>
@@ -576,7 +576,7 @@ footer a:hover{text-decoration:underline}
 
   <footer id="fuentes">
     <p><b>Fuente oficial:</b> INEI — Encuesta Nacional de Uso del Tiempo (ENUT) 2024, Principales Resultados. <a href="https://www.gob.pe/institucion/inei/campa%C3%B1as/99771-resultados-de-la-encuesta-nacional-de-uso-del-tiempo-enut" target="_blank" rel="noopener">Ver en gob.pe</a></p>
-    <p><b>Módulo 1 · Uso del tiempo (ENUT).</b> Próximo módulo: <b>Mujer en la agricultura</b>, con la <a href="https://www.gob.pe/institucion/inei/campa%C3%B1as/110640-resultados-de-la-encuesta-nacional-agropecuaria-ena-2024" target="_blank" rel="noopener">Encuesta Nacional Agropecuaria (ENA 2024)</a> del INEI: solo ~1 de cada 3 productores agropecuarios (31,2%) son mujeres, con menos tierra, crédito y asistencia técnica. Cortes por región y pérdidas de cultivos, en camino.</p>
+    <p><b>Módulo 1 · Uso del tiempo (ENUT).</b> &nbsp;→ <b><a href="agro.html">Módulo 2 · Mujer en la agricultura</a></b>: con la Encuesta Nacional Agropecuaria (ENA) del INEI, las mujeres son un tercio de las productoras pero solo ~1 de cada 4 de quienes acceden a crédito y asistencia técnica.</p>
     <p><b>Tiempo Perú</b> es un proyecto de <b>Kely Alfaro</b> y <b>Carlos Cárdenas Fernández</b>.</p>
     <p>Observatorio independiente de datos públicos · Las cifras provienen íntegramente de fuentes oficiales; el simulador es una valorización referencial · Octubre 2026</p>
   </footer>
@@ -975,6 +975,7 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
     $("chatClose").addEventListener("click",()=>toggle(false));
     $("chatForm").addEventListener("submit",(e)=>{e.preventDefault();const i=$("chatInput"),v=i.value;i.value="";handle(v);});
     document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&open)toggle(false);});
+    greet(); // pre-carga el saludo + sugerencias para que el panel nunca se vea vacío
   }
   if(document.readyState!=="loading")init();else document.addEventListener("DOMContentLoaded",init);
 })();

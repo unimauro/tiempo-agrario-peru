@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mujer en la agricultura · Tiempo Perú (ENA 2022)</title>
+<meta name="description" content="Módulo 2 de Tiempo Perú: las mujeres son un tercio de quienes conducen el agro peruano, pero acceden mucho menos a tierra, crédito, capacitación y asistencia técnica. Datos de la Encuesta Nacional Agropecuaria (ENA) del INEI.">
+<meta name="author" content="Kely Alfaro y Carlos Cárdenas Fernández">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://unimauro.github.io/tiempo-peru/agro.html">
+<meta property="og:site_name" content="Tiempo Perú">
+<meta property="og:title" content="Mujer en la agricultura — el agro también es invisible">
+<meta property="og:description" content="Las mujeres son 1 de cada 3 productoras agropecuarias, pero solo ~24% de quienes acceden a crédito, capacitación y asistencia técnica. ENA (INEI).">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://unimauro.github.io/tiempo-peru/agro.html">
+<meta property="og:image" content="https://unimauro.github.io/tiempo-peru/og.png?v=2">
+<meta name="theme-color" content="#f5f0e2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d1810" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
+<script>try{var _t=localStorage.getItem('tap-theme');document.documentElement.setAttribute('data-theme',_t||'light');}catch(e){document.documentElement.setAttribute('data-theme','light');}</script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ4VQH54X9"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YJ4VQH54X9');</script>
+<style>
+:root{
+  --paper:#f5f0e2; --panel:#fdfbf3; --ink:#241d12; --muted:#6e6349; --faint:#978a6b;
+  --line:#e8dfca; --personal:#c7bd99; --wheat:#e3a52b; --madder:#c5402a; --madder-soft:#e07a52; --green:#3f8a5f;
+  --ring:#c5402a; --e-out:cubic-bezier(.23,1,.32,1);
+  --shadow:0 1px 2px rgba(60,42,15,.05); --shadow-lift:0 14px 32px rgba(180,90,40,.16);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
+  --line:#42371f; --personal:#7c7760; --wheat:#e7b057; --madder:#e5604a; --madder-soft:#cf6a49; --green:#79d0a3;
+  --ring:#e5604a; --shadow:0 1px 1px rgba(0,0,0,.3); --shadow-lift:0 16px 34px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
+  --line:#42371f; --personal:#7c7760; --wheat:#e7b057; --madder:#e5604a; --madder-soft:#cf6a49; --green:#79d0a3;
+  --ring:#e5604a; --shadow:0 1px 1px rgba(0,0,0,.3); --shadow-lift:0 16px 34px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;
+  background:radial-gradient(1200px 560px at 10% -10%, color-mix(in srgb,var(--wheat) 26%,transparent), transparent 58%),var(--paper);background-repeat:no-repeat}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:Bitter,Georgia,serif;font-weight:600;line-height:1.12;letter-spacing:-.01em;margin:0}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+a{color:var(--madder)}
+:focus-visible{outline:2.5px solid var(--ring);outline-offset:3px;border-radius:3px}
+.topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--paper) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topin{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:11px 20px}
+.topin .brand{font-family:Bitter;font-weight:700;font-size:15px;white-space:nowrap}
+.topin .back{margin-left:auto;font-size:13.5px;color:var(--muted);text-decoration:none;padding:6px 11px;border-radius:8px;border:1px solid var(--line)}
+.topin .back:hover{border-color:var(--madder);color:var(--ink)}
+.tbtn{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer}
+@media(max-width:560px){.topin .brand{font-size:14px}.topin .back .lbl{display:none}}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:500}
+.eyebrow b{color:var(--madder);font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--madder);display:inline-block}
+.hero{padding:30px 0 10px}
+.hero h1{font-size:clamp(34px,7vw,64px);letter-spacing:-.02em;max-width:16ch}
+.hero .lede{font-size:clamp(16px,2.3vw,20px);color:var(--muted);max-width:58ch;margin:18px 0 0}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0 4px}
+@media(max-width:680px){.chips{grid-template-columns:1fr}}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.chip .cn{display:block;font-family:"IBM Plex Mono",monospace;font-size:26px;font-weight:600;color:var(--madder);line-height:1}
+.chip .ct{display:block;font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.4}
+section{padding:46px 0 8px}
+section h2{font-size:clamp(24px,4vw,34px);max-width:22ch}
+section .sub{color:var(--muted);margin:12px 0 0;max-width:64ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 18px 12px;margin-top:22px;box-shadow:var(--shadow)}
+.panel h3{font-size:17px}
+.panel .hint{font-size:13px;color:var(--faint);margin:3px 0 10px}
+.chart{width:100%;height:420px}
+@media(max-width:640px){.chart{height:460px}}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
+@media(max-width:760px){.cards{grid-template-columns:1fr 1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.card .n{font-family:"IBM Plex Mono",monospace;font-size:26px;font-weight:600;color:var(--ink);line-height:1}
+.card.hl .n{color:var(--madder)}
+.card .t{font-size:13px;color:var(--muted);margin-top:8px}
+.callout{background:color-mix(in srgb,var(--green) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--green) 28%,var(--line));border-left:4px solid var(--green);border-radius:12px;padding:18px 20px;margin-top:22px}
+.callout h3{margin:0 0 6px;font-size:18px;color:var(--green)}
+.callout p{margin:0 0 8px}
+.srcline{font-size:12.5px;color:var(--faint);margin-top:14px}
+footer{margin-top:52px;border-top:1px solid var(--line);padding:30px 0 70px;color:var(--muted);font-size:14px}
+footer a{color:var(--madder);text-decoration:none}footer a:hover{text-decoration:underline}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s var(--e-out),transform .5s var(--e-out);transition-delay:calc(var(--i,0)*60ms)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition-duration:.01ms!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topin">
+    <span class="brand">Tiempo Perú</span>
+    <a class="back" href="index.html">← <span class="lbl">Uso del tiempo (Módulo 1)</span><span class="lbl" style="display:none"></span></a>
+    <button class="tbtn" id="themeToggle" aria-label="Cambiar tema">◐</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow"><span class="dot"></span> Módulo 2 · Mujer en la agricultura · datos <b>ENA (INEI)</b></span>
+    <h1>El agro también es invisible</h1>
+    <p class="lede">Las mujeres son un tercio de quienes conducen el campo peruano. Pero cuando miras quién consigue tierra, crédito, capacitación o asistencia técnica, su presencia cae a uno de cada cuatro. Mientras más fino el corte, más ancha la brecha.</p>
+  </header>
+
+  <div class="chips reveal">
+    <div class="chip" style="--i:0"><span class="cn">33,7 %</span><span class="ct">de quienes conducen una unidad agropecuaria son <b>mujeres</b> (ENA 2022)</span></div>
+    <div class="chip" style="--i:1"><span class="cn">24 %</span><span class="ct">pero son solo ~1 de cada 4 de quienes acceden a <b>crédito y asistencia técnica</b></span></div>
+    <div class="chip" style="--i:2"><span class="cn">21,8 %</span><span class="ct">de las productoras <b>no tiene ningún nivel educativo</b> (hombres: 5,7 %)</span></div>
+  </div>
+
+  <section id="brecha">
+    <span class="eyebrow"><span class="dot"></span> La brecha, recurso por recurso</span>
+    <h2>Un tercio produce, pero solo un cuarto accede</h2>
+    <p class="sub">Cada barra es el porcentaje de mujeres entre quienes acceden a ese recurso. La línea marca su peso real como productoras (33,7 %): todo lo que queda por debajo es una brecha en contra.</p>
+    <div class="panel reveal">
+      <h3>Participación de mujeres por recurso agropecuario</h3>
+      <p class="hint">% de mujeres entre quienes acceden a cada recurso. ENA 2022 (INEI).</p>
+      <div id="chartGap" class="chart"></div>
+    </div>
+  </section>
+
+  <section id="contexto">
+    <span class="eyebrow"><span class="dot"></span> El contexto</span>
+    <h2>Un agro que casi no recibe apoyo</h2>
+    <p class="sub">Las brechas de género se montan sobre un sector que, en general, accede a muy poco. Datos para toda la pequeña y mediana agricultura (ENA 2022).</p>
+    <div class="cards">
+      <div class="card hl reveal" style="--i:0"><div class="n mono">35,5 %</div><div class="t">tiene <b>título de propiedad</b> de al menos una parcela (64,5 % no)</div></div>
+      <div class="card reveal" style="--i:1"><div class="n mono">9,1 %</div><div class="t">solicitó <b>algún crédito</b> en el último año</div></div>
+      <div class="card reveal" style="--i:2"><div class="n mono">3,8 %</div><div class="t">recibió <b>asistencia técnica</b> — lo más bajo de la ENA</div></div>
+      <div class="card reveal" style="--i:3"><div class="n mono">98,7 %</div><div class="t">no tiene ningún <b>seguro agropecuario</b></div></div>
+    </div>
+  </section>
+
+  <section id="importa">
+    <span class="eyebrow"><span class="dot"></span> Por qué importa</span>
+    <h2>Medir la brecha es el primer paso para cerrarla</h2>
+    <p class="sub">La mujer rural trabaja la chacra y además sostiene el hogar (eso lo muestra el <a href="index.html">Módulo 1</a>). Pero el sistema le entrega menos herramientas para producir.</p>
+    <div class="callout reveal">
+      <h3>El sustento técnico que faltaba</h3>
+      <p>Si la banca y el propio Estado piden <b>título de propiedad</b> para dar crédito, y las mujeres tienen menos títulos, la brecha se refuerza sola: menos tierra a su nombre → menos crédito → menos capacidad de potenciar su producción.</p>
+      <p>Poner estas brechas en números da base para pedir <b>presupuesto y programas con enfoque de género</b> en la agricultura —titulación, crédito y asistencia técnica dirigidos a quienes realmente trabajan la tierra.</p>
+    </div>
+  </section>
+
+  <footer id="fuentes">
+    <p><b>Fuente oficial:</b> INEI — Encuesta Nacional Agropecuaria (ENA) 2022, Principales Resultados (Pequeñas y Medianas Unidades Agropecuarias). <a href="https://www.gob.pe/institucion/inei/campa%C3%B1as/110640-resultados-de-la-encuesta-nacional-agropecuaria-ena-2024" target="_blank" rel="noopener">Ver la ENA más reciente (2024) ↗</a></p>
+    <p>En la ENA 2024, la participación femenina es de ~31,2 %. Este módulo usa la ENA 2022 por tener el detalle por sexo publicado. Próximo paso: cortes por región, pueblo indígena y causas de pérdida de cultivos (requiere microdatos).</p>
+    <p><b>Tiempo Perú</b> es un proyecto de <b>Kely Alfaro</b> y <b>Carlos Cárdenas Fernández</b>. No se inventan cifras. · <a href="index.html">← Volver al Módulo 1 (Uso del tiempo)</a></p>
+  </footer>
+</div>
+
+<script>
+const css=getComputedStyle(document.documentElement);
+const C=n=>css.getPropertyValue(n).trim();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---- Brecha de acceso: % de mujeres entre quienes acceden a cada recurso (ENA 2022, INEI) ----
+const GAP=[
+  ['Título de propiedad',33.9],
+  ['Acceso a información',32.3],
+  ['Título inscrito en RR.PP.',30.9],
+  ['Capacitación',26.0],
+  ['Solicitó crédito',24.2],
+  ['Asistencia técnica',24.1],
+  ['Pertenece a organización',23.8]
+];
+const BASE=33.7; // participación de mujeres como productoras
+let chart;
+function drawGap(){
+  const el=document.getElementById('chartGap'); if(typeof echarts==='undefined'||!el) return;
+  if(!chart) chart=echarts.init(el);
+  const label={color:C('--muted'),fontSize:12,fontFamily:'IBM Plex Sans'};
+  const cats=GAP.map(d=>d[0]), vals=GAP.map(d=>d[1]);
+  chart.setOption({
+    grid:{left:6,right:40,top:10,bottom:30,containLabel:true},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:C('--panel'),borderColor:C('--line'),textStyle:{color:C('--ink')},
+      formatter:p=>p[0].axisValue+': <b>'+p[0].value.toLocaleString('es-PE')+'%</b> mujeres'},
+    xAxis:{type:'value',max:40,axisLabel:{...label,formatter:'{value}%'},axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:C('--line')}}},
+    yAxis:{type:'category',data:cats,inverse:true,axisLabel:{...label,color:C('--ink')},axisLine:{lineStyle:{color:C('--line')}},axisTick:{show:false}},
+    series:[{type:'bar',data:vals,barWidth:'58%',
+      itemStyle:{color:C('--madder'),borderRadius:[0,5,5,0]},
+      animationDuration:reduce?0:700,animationEasing:'cubicOut',
+      label:{show:true,position:'right',formatter:p=>p.value.toLocaleString('es-PE')+'%',color:C('--ink'),fontSize:12,fontFamily:'IBM Plex Mono'},
+      markLine:{symbol:'none',silent:true,
+        lineStyle:{color:C('--green'),type:'dashed',width:2},
+        label:{formatter:'Son el 33,7% de productoras',color:C('--green'),fontSize:11,position:'insideEndTop'},
+        data:[{xAxis:BASE}]}
+    }]
+  });
+}
+drawGap();
+window.addEventListener('resize',()=>chart&&chart.resize());
+
+// reveal
+(function(){const els=[...document.querySelectorAll('.reveal')];
+ if(reduce){els.forEach(e=>e.classList.add('in'));return;}
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15,rootMargin:'0px 0px -8% 0px'});
+ els.forEach(e=>io.observe(e));})();
+
+// theme
+const root=document.documentElement;
+try{const s=localStorage.getItem('tap-theme');if(s)root.setAttribute('data-theme',s);}catch(e){}
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  const cur=root.getAttribute('data-theme');
+  const dark=cur==='dark'||(!cur&&matchMedia('(prefers-color-scheme: dark)').matches);
+  root.setAttribute('data-theme',dark?'light':'dark');
+  try{localStorage.setItem('tap-theme',dark?'light':'dark');}catch(e){}
+  setTimeout(drawGap,40);
+});
+</script>
+</body>
+</html>
