@@ -20,6 +20,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Tiempo Perú — El tiempo invisible: la mujer rural dedica 3,5 veces más tiempo que el hombre al trabajo no remunerado.">
 <script>try{var _t=localStorage.getItem('tap-theme');document.documentElement.setAttribute('data-theme',_t||'light');}catch(e){document.documentElement.setAttribute('data-theme','light');}</script>
+<script src="config.js"></script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ4VQH54X9"></script>
 <script>
@@ -899,7 +900,7 @@ document.getElementById('themeToggle').addEventListener('click',()=>{
   // pégalo aquí para activar la IA. Mientras esté vacío, el chat usa el respondedor local.
   const CHAT = {
     endpoint: "https://ai.tunky.net/v1/chat",
-    token: "", // ej: "tp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    token: (typeof window!=="undefined" && window.TP_CHAT_TOKEN) ? window.TP_CHAT_TOKEN : "", // <- se define en config.js
     system:
       "Eres el asistente de 'Tiempo Perú — El tiempo invisible', un observatorio del trabajo no remunerado y de cuidados en el Perú basado en la Encuesta Nacional de Uso del Tiempo (ENUT) 2024 del INEI. " +
       "REGLAS: 1) Habla solo del uso del tiempo, el trabajo no remunerado/cuidados, las brechas de género y lo que muestra este sitio. " +
