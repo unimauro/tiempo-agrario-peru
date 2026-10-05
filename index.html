@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El tiempo invisible · El trabajo no remunerado en el Perú (ENUT 2024)</title>
-<meta name="description" content="Cuánto trabajo doméstico y de cuidados no remunerado sostiene los hogares del Perú, según la ENUT 2024 (INEI) — con un simulador que le pone precio a tus horas. La brecha de género es mayor en el campo.">
+<title>Tiempo Perú · El tiempo invisible — trabajo no remunerado (ENUT 2024)</title>
+<meta name="description" content="Tiempo Perú: cuánto trabajo doméstico y de cuidados no remunerado sostiene los hogares del Perú, según la ENUT 2024 (INEI) — con un simulador que le pone precio a tus horas. La brecha de género es mayor en el campo.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="El tiempo invisible — el trabajo que no se ve ni se paga">
+<meta property="og:title" content="Tiempo Perú — el trabajo que no se ve ni se paga">
 <meta property="og:description" content="ENUT 2024 (INEI): la mujer rural dedica 3,5 veces más tiempo que el hombre al trabajo no remunerado. Incluye un simulador que valoriza en soles tu trabajo doméstico y de cuidados.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="og.png">
-<meta property="og:url" content="https://unimauro.github.io/tiempo-agrario-peru/">
+<meta property="og:url" content="https://unimauro.github.io/tiempo-peru/">
+<script>try{var _t=localStorage.getItem('tap-theme');document.documentElement.setAttribute('data-theme',_t||'light');}catch(e){document.documentElement.setAttribute('data-theme','light');}</script>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,28 +20,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js"></script>
 <style>
 :root{
-  --paper:#e7e3d3; --panel:#efebdd; --ink:#20190f; --muted:#6c6049; --faint:#8c8166;
-  --line:#d6cfba;
-  --personal:#9a9b86; --wheat:#bf8a2d; --madder:#9e2b1e; --madder-soft:#c1573f; --green:#3a6b50;
-  --ring:#9e2b1e;
+  /* Paleta clara, luminosa y alegre */
+  --paper:#f5f0e2; --panel:#fdfbf3; --ink:#241d12; --muted:#6e6349; --faint:#978a6b;
+  --line:#e8dfca;
+  --personal:#c7bd99; --wheat:#e3a52b; --madder:#c5402a; --madder-soft:#e07a52; --green:#3f8a5f;
+  --ring:#c5402a;
   /* Emil Kowalski canonical curves — strong ease-out for UI entrances/interactions */
   --e-out:cubic-bezier(.23,1,.32,1); --e-dec:cubic-bezier(.23,1,.32,1);
-  --shadow:0 1px 1px rgba(40,30,10,.04);
-  --shadow-lift:0 14px 30px rgba(60,42,15,.14);
+  --shadow:0 1px 2px rgba(60,42,15,.05);
+  --shadow-lift:0 14px 32px rgba(180,90,40,.16);
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
   --line:#42371f;
-  --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330; --green:#6cc49a;
-  --ring:#d8503c;
+  --personal:#7c7760; --wheat:#e7b057; --madder:#e5604a; --madder-soft:#cf6a49; --green:#79d0a3;
+  --ring:#e5604a;
   --shadow:0 1px 1px rgba(0,0,0,.3);
   --shadow-lift:0 16px 34px rgba(0,0,0,.5);
 }}
 :root[data-theme="dark"]{
   --paper:#1d1810; --panel:#2d2619; --ink:#f1ead9; --muted:#b0a488; --faint:#8f8468;
   --line:#42371f;
-  --personal:#6e6b58; --wheat:#d7a24a; --madder:#d8503c; --madder-soft:#b84330; --green:#6cc49a;
-  --ring:#d8503c;
+  --personal:#7c7760; --wheat:#e7b057; --madder:#e5604a; --madder-soft:#cf6a49; --green:#79d0a3;
+  --ring:#e5604a;
   --shadow:0 1px 1px rgba(0,0,0,.3);
   --shadow-lift:0 16px 34px rgba(0,0,0,.5);
 }
@@ -50,7 +52,7 @@ body{margin:0;color:var(--ink);
   font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
   /* luz de amanecer cálida sobre el campo — limpio, sin textura ruidosa */
   background:
-    radial-gradient(1200px 560px at 10% -10%, color-mix(in srgb,var(--wheat) 20%,transparent), transparent 58%),
+    radial-gradient(1200px 560px at 10% -10%, color-mix(in srgb,var(--wheat) 26%,transparent), transparent 58%),
     var(--paper);
   background-repeat:no-repeat}
 .wrap{max-width:1000px;margin:0 auto;padding:0 20px}
@@ -243,7 +245,7 @@ footer a:hover{text-decoration:underline}
 
 <div class="topbar">
   <div class="topin">
-    <span class="brand">El tiempo invisible</span>
+    <span class="brand">Tiempo Perú</span>
     <nav class="nav" id="nav">
       <a href="#explora">El día</a>
       <a href="#simulador">Simulador</a>
@@ -700,7 +702,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.classList.
   });
   $('clearBtn').addEventListener('click',()=>{ACTS.forEach(([id])=>$(id).value=0);calc();});
   $('shareBtn').addEventListener('click',async()=>{
-    const txt=`Mi trabajo no remunerado vale ${$('rMonth').textContent} al mes (${$('rYear').textContent} al año) según «El tiempo invisible» — ENUT 2024. https://unimauro.github.io/tiempo-agrario-peru/`;
+    const txt=`Mi trabajo no remunerado vale ${$('rMonth').textContent} al mes (${$('rYear').textContent} al año) según Tiempo Perú («El tiempo invisible») — ENUT 2024. https://unimauro.github.io/tiempo-peru/`;
     const done=()=>{const m=$('shareMsg');m.hidden=false;setTimeout(()=>m.hidden=true,2200);};
     try{
       if(navigator.share){ await navigator.share({title:'El tiempo invisible',text:txt}); }
