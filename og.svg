@@ -1,29 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Georgia, 'Times New Roman', serif">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2a1f12"/>
-      <stop offset="1" stop-color="#4a3418"/>
+      <stop offset="0" stop-color="#3a2a16"/>
+      <stop offset="1" stop-color="#5c3f1d"/>
     </linearGradient>
+    <radialGradient id="sun" cx="12%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#e3a52b" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#e3a52b" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <!-- franja -->
-  <rect x="0" y="0" width="14" height="630" fill="#b4472e"/>
-  <text x="80" y="110" fill="#e0b268" font-size="26" letter-spacing="3" font-family="Arial, sans-serif">OBSERVATORIO · ENUT 2024 (INEI)</text>
-  <text x="76" y="230" fill="#fffdf8" font-size="88" font-weight="700">El tiempo invisible</text>
-  <text x="76" y="326" fill="#e0b268" font-size="60" font-weight="700">el trabajo que no se paga</text>
-  <text x="80" y="410" fill="#d8cfbf" font-size="34" font-family="Arial, sans-serif">El trabajo rural —y de cuidados— que no paga nadie</text>
-  <text x="80" y="455" fill="#d8cfbf" font-size="34" font-family="Arial, sans-serif">y que las estadísticas agrarias no miden.</text>
-  <!-- stat destacada -->
-  <g transform="translate(80,510)">
-    <text x="0" y="60" fill="#e08064" font-size="78" font-weight="700" font-family="Arial, sans-serif">3,5× más tiempo</text>
-    <text x="0" y="98" fill="#a79b86" font-size="26" font-family="Arial, sans-serif">en trabajo no remunerado: mujer rural 5 h 15 min vs. hombre 1 h 30 min</text>
+  <rect width="1200" height="630" fill="url(#sun)"/>
+  <rect x="0" y="0" width="14" height="630" fill="#c5402a"/>
+
+  <text x="80" y="104" fill="#e3a52b" font-size="26" letter-spacing="4" font-family="Arial, sans-serif" font-weight="700">TIEMPO PERÚ · ENUT 2024 (INEI)</text>
+  <text x="76" y="220" fill="#fdf6e8" font-size="92" font-weight="700">El tiempo invisible</text>
+  <text x="80" y="292" fill="#f0c98a" font-size="36" font-family="Arial, sans-serif">El trabajo doméstico y de cuidados que no se ve ni se paga</text>
+
+  <g transform="translate(80,360)">
+    <text x="0" y="78" fill="#e07a52" font-size="92" font-weight="700" font-family="Arial, sans-serif">3,5× más tiempo</text>
+    <text x="0" y="122" fill="#d8cbb4" font-size="28" font-family="Arial, sans-serif">La mujer rural dedica 5 h 15 min/día a trabajo no remunerado; el hombre, 1 h 30 min.</text>
   </g>
-  <!-- icono reloj+brote -->
-  <g transform="translate(980,470) scale(2.1)">
-    <circle cx="32" cy="30" r="17" fill="none" stroke="#f7f4ee" stroke-width="3.5"/>
-    <path d="M32 30 L32 19" stroke="#f7f4ee" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M32 30 L40 34" stroke="#e0b268" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M26 52 q6 -10 12 0" fill="none" stroke="#6cc49a" stroke-width="3.5" stroke-linecap="round"/>
-    <circle cx="32" cy="46" r="3" fill="#6cc49a"/>
+
+  <text x="80" y="565" fill="#b7a98d" font-size="24" font-family="Arial, sans-serif">Kely Alfaro · Carlos Cárdenas  —  unimauro.github.io/tiempo-peru</text>
+
+  <!-- espiga de trigo -->
+  <g transform="translate(990,150) scale(2.0)" stroke="#e3a52b" fill="#e3a52b">
+    <path d="M30 150 C30 110 30 86 30 50" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M30 46 L30 20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M30 48 L17 24" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M30 48 L43 24" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="30" cy="54" rx="6.5" ry="12"/>
+    <ellipse cx="21" cy="68" rx="6.5" ry="12" transform="rotate(28 21 68)"/>
+    <ellipse cx="39" cy="68" rx="6.5" ry="12" transform="rotate(-28 39 68)"/>
+    <ellipse cx="21" cy="88" rx="6.5" ry="12" transform="rotate(28 21 88)"/>
+    <ellipse cx="39" cy="88" rx="6.5" ry="12" transform="rotate(-28 39 88)"/>
+    <ellipse cx="21" cy="108" rx="6.5" ry="12" transform="rotate(28 21 108)"/>
+    <ellipse cx="39" cy="108" rx="6.5" ry="12" transform="rotate(-28 39 108)"/>
   </g>
 </svg>
