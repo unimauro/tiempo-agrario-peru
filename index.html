@@ -310,6 +310,7 @@ footer a:hover{text-decoration:underline}
 .chat-panel{position:fixed;right:18px;bottom:18px;z-index:41;width:min(380px,calc(100vw - 36px));height:min(560px,calc(100vh - 36px));
   background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(40,25,10,.32);
   display:flex;flex-direction:column;overflow:hidden;animation:chatin .26s var(--e-out)}
+.chat-panel[hidden]{display:none}  /* el atributo hidden debe ocultar el panel pese al display:flex */
 @keyframes chatin{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 .chat-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--madder);color:#fff}
 .chat-ident{font-family:Bitter;font-weight:600;font-size:15px}
